@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>D'Ajiks Academy — Kecermatan Psiko-CAT</title>
+<link href="https://fonts.googleapis.com/css2?family=Lora:wght@400;600;700&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg-page:      #f0f4f8;
+  --bg-card:      #ffffff;
+  --bg-hover:     #e8ecf1;
+  --bg-row:       #fafbfc;
+  --bg-timer:     #e0e8f0;
+  --gold:         #b8956a;
+  --gold-warn:    #d4821e;
+  --gold-light:   #e8c8a0;
+  --danger:       #c0392b;
+  --danger-bg:    #fde8e6;
+  --success:      #1e7e4e;
+  --success-bg:   #e6f7ee;
+  --border:       #9aa8bc;
+  --border-soft:  #d8e0eb;
+  --text-main:    #1a2332;
+  --text-muted:   #5a6f85;
+  --text-dim:     #8a9ab0;
+}
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: 'Segoe UI', system-ui, sans-serif;
+  background: var(--bg-page);
+  color: var(--text-main);
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+}
+.app-header {
+  position: sticky; top: 0; z-index: 200;
+  height: 48px;
+  background: var(--bg-card);
+  border-bottom: 1px solid var(--border-soft);
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 1rem;
+  box-shadow: 0 1px 3px rgba(26,35,50,.05);
+}
+.app-logo { font-family: 'Lora', serif; font-size: .85rem; font-weight: 700; color: var(--gold); line-height: 1.1; }
+.app-logo small { display: block; font-family: 'Segoe UI', sans-serif; font-size: .55rem; font-weight: 400; color: var(--text-dim); letter-spacing: .06em; text-transform: uppercase; }
+.app-peserta { font-size: .72rem; color: var(--text-muted); letter-spacing: .02em; }
+.screen { display: none; }
+.screen.active { display: block; }
+#screen-welcome.active, #screen-intro.active {
+  display: flex; align-items: center; justify-content: center;
+  min-height: calc(100vh - 48px); padding: 1.5rem 1rem;
+}
+.welcome-wrap {
+  background: var(--bg-card);
+  border: 1px solid var(--border-soft);
+  border-radius: 8px;
+  padding: 2rem 1.75rem;
+  max-width: 380px; width: 100%;
+  position: relative;
+  box-shadow: 0 2px 10px rgba(26,35,50,.06);
+}
+.welcome-wrap::before { content: ''; position: absolute; top: 0; left: 1.5rem; right: 1.5rem; height: 2px; background: var(--gold); border-radius: 2px; }
+.welcome-badge { font-family: 'JetBrains Mono', monospace; font-size: .55rem; letter-spacing: .16em; text-transform: uppercase; color: var(--gold); border: 1px solid var(--gold-light); padding: 3px 10px; border-radius: 3px; display: inline-block; margin-bottom: 1rem; }
+.welcome-title { font-family: 'Lora', serif; font-size: 1.45rem; font-weight: 700; color: var(--text-main); line-height: 1.2; margin-bottom: .3rem; }
+.welcome-sub { font-size: .78rem; color: var(--text-muted); font-style: italic; margin-bottom: 1.5rem; }
+.info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: .5rem; margin-bottom: 1.5rem; }
+.info-item { background: var(--bg-page); border: 1px solid var(--border-soft); border-radius: 5px; padding: .6rem .7rem; }
+.info-item .lbl { font-family: 'JetBrains Mono', monospace; font-size: .52rem; letter-spacing: .12em; text-transform: uppercase; color: var(--text-dim); margin-bottom: .15rem; }
+.info-item .val { font-family: 'Lora', serif; font-size: .8rem; font-weight: 600; color: var(--gold); }
+.field-lbl { font-family: 'JetBrains Mono', monospace; font-size: .6rem; letter-spacing: .1em; text-transform: uppercase; color: var(--text-muted); display: block; margin-bottom: .35rem; }
+.name-input { width: 100%; background: var(--bg-page); border: 1px solid var(--border-soft); border-bottom: 2px solid var(--gold-light); color: var(--text-main); font-size: .95rem; padding: .6rem .8rem; border-radius: 5px; outline: none; margin-bottom: 1.25rem; transition: border-color .2s, box-shadow .2s; font-family: 'Segoe UI', sans-serif; }
+.name-input:focus { border-color: var(--gold); box-shadow: 0 0 0 3px rgba(184,149,106,.12); }
+.btn-start { width: 100%; padding: .75rem; background: var(--gold); color: #fff; font-family: 'Lora', serif; font-size: .78rem; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; border: none; border-radius: 5px; cursor: pointer; transition: background .2s, transform .15s; box-shadow: 0 3px 8px rgba(184,149,106,.25); }
+.btn-start:hover { background: #a07d5a; transform: translateY(-1px); }
+.intro-wrap { background: var(--bg-card); border: 1px solid var(--border-soft); border-radius: 8px; padding: 2rem 1.75rem; max-width: 420px; width: 100%; text-align: center; position: relative; box-shadow: 0 2px 10px rgba(26,35,50,.06); }
+.intro-wrap::before { content: ''; position: absolute; top: 0; left: 1.5rem; right: 1.5rem; height: 2px; background: var(--gold); border-radius: 2px; }
+.intro-col-tag { font-family: 'JetBrains Mono', monospace; font-size: .55rem; letter-spacing: .18em; text-transform: uppercase; color: var(--text-dim); margin-bottom: .3rem; }
+.intro-col-title { font-family: 'Lora', serif; font-size: 1.6rem; font-weight: 700; color: var(--gold); margin-bottom: .2rem; }
+.intro-col-sub { font-size: .78rem; color: var(--text-muted); font-style: italic; margin-bottom: 1.25rem; }
+.intro-key-table { width: 100%; border-collapse: collapse; margin: 0 auto 1.25rem; border: 1px solid var(--border); table-layout: fixed; }
+.intro-key-table th { background: var(--bg-hover); padding: .45rem; text-align: center; font-family: 'Lora', serif; font-size: .78rem; font-weight: 600; color: var(--gold); border: 1px solid var(--border); }
+.intro-key-table td { background: var(--bg-card); padding: .6rem; text-align: center; font-family: 'JetBrains Mono', monospace; font-size: 1.1rem; font-weight: 600; color: var(--text-main); border: 1px solid var(--border); }
+.intro-note { font-size: .76rem; color: var(--text-muted); line-height: 1.5; margin-bottom: 1.25rem; }
+.intro-note strong { color: var(--text-main); }
+.intro-note span { color: var(--gold); font-weight: 600; }
+.btn-mulai { background: transparent; border: 2px solid var(--gold); color: var(--gold); font-family: 'Lora', serif; font-size: .76rem; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; padding: .7rem 2rem; border-radius: 5px; cursor: pointer; transition: all .2s; }
+.btn-mulai:hover { background: var(--gold); color: #fff; }
+#screen-exam { display: none; }
+#screen-exam.active { display: block; }
+.exam-container { max-width: 420px; margin: 0 auto; padding: 1rem .875rem 5rem; }
+.soal-context { display: flex; justify-content: space-between; align-items: center; margin-bottom: .75rem; padding: 0 .1rem; }
+.soal-context-left { font-family: 'JetBrains Mono', monospace; font-size: .6rem; color: var(--text-dim); letter-spacing: .08em; text-transform: uppercase; }
+.soal-context-left strong { color: var(--gold); font-weight: 700; }
+.soal-context-right { font-family: 'Lora', serif; font-size: .75rem; color: var(--gold); font-weight: 600; }
+.timer-wrap { background: var(--bg-timer); border: 1px solid var(--border); border-radius: 6px; padding: .875rem 1rem; display: flex; align-items: center; justify-content: space-between; margin-bottom: 1rem; }
+.timer-wrap-left { display: flex; flex-direction: column; gap: 2px; }
+.timer-lbl { font-family: 'JetBrains Mono', monospace; font-size: .55rem; letter-spacing: .14em; text-transform: uppercase; color: var(--text-muted); }
+.timer-progress-text { font-family: 'JetBrains Mono', monospace; font-size: .68rem; color: var(--text-main); font-weight: 600; }
+.timer-num { font-family: 'JetBrains Mono', monospace; font-size: 2rem; font-weight: 700; line-height: 1; color: var(--text-main); transition: color .3s; letter-spacing: .02em; min-width: 50px; text-align: right; }
+.timer-num.t-warn { color: var(--gold-warn); }
+.timer-num.t-danger { color: var(--danger); animation: blink .5s infinite; }
+@keyframes blink { 0%,100%{opacity:1} 50%{opacity:.5} }
+.progress-track { height: 3px; background: var(--border-soft); border-radius: 2px; overflow: hidden; margin-bottom: 1rem; }
+.progress-bar { height: 100%; background: linear-gradient(90deg, var(--gold-light), var(--gold)); transition: width .4s ease; width: 0%; }
+.section { display: flex; align-items: flex-start; gap: .75rem; margin-bottom: 1rem; }
+.section-label { font-family: 'Lora', serif; font-size: .85rem; font-weight: 600; color: var(--text-main); min-width: 95px; padding-top: .5rem; flex-shrink: 0; }
+.kunci-table, .soal-table { flex: 1; border-collapse: collapse; border: 1px solid var(--border); table-layout: fixed; background: var(--bg-card); }
+.kunci-table th { padding: .35rem .2rem; background: var(--bg-card); text-align: center; font-family: 'Lora', serif; font-size: .72rem; font-weight: 600; color: var(--text-main); border: 1px solid var(--border); height: 26px; }
+.kunci-table td { padding: .4rem .2rem; text-align: center; font-family: 'JetBrains Mono', monospace; font-size: 1rem; font-weight: 600; color: var(--text-main); border: 1px solid var(--border); background: var(--bg-card); height: 34px; }
+.soal-table td { padding: .45rem .2rem; text-align: center; font-family: 'JetBrains Mono', monospace; font-size: 1.05rem; font-weight: 700; color: var(--text-main); border: 1px solid var(--border); background: var(--bg-card); height: 36px; }
+.jawaban-wrap { margin-top: 1.25rem; }
+.jawaban-title { font-family: 'Lora', serif; font-size: .85rem; font-weight: 600; color: var(--text-main); margin-bottom: .6rem; }
+.jawaban-list { display: flex; flex-direction: column; gap: 4px; padding-left: .25rem; }
+.jawaban-item { display: flex; align-items: center; gap: .6rem; padding: .45rem .6rem; border: 1px solid transparent; border-radius: 4px; cursor: pointer; transition: all .15s; background: transparent; width: 100%; text-align: left; }
+.jawaban-item:hover { background: rgba(184,149,106,.06); border-color: var(--gold-light); }
+.jawaban-item.selected { background: rgba(184,149,106,.1); border-color: var(--gold); }
+.radio-dot { width: 14px; height: 14px; border: 1.5px solid var(--text-dim); border-radius: 50%; flex-shrink: 0; position: relative; transition: border-color .15s; }
+.jawaban-item.selected .radio-dot { border-color: var(--gold); border-width: 2px; }
+.jawaban-item.selected .radio-dot::after { content: ''; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 6px; height: 6px; background: var(--gold); border-radius: 50%; }
+.j-letter { font-family: 'Lora', serif; font-size: .85rem; font-weight: 700; color: var(--text-main); min-width: 14px; }
+.jawaban-item.selected .j-letter { color: var(--gold); }
+.j-sym { font-family: 'JetBrains Mono', monospace; font-size: .95rem; font-weight: 600; color: var(--text-muted); margin-left: auto; }
+.jawaban-item.selected .j-sym { color: var(--gold); }
+.exam-nav { position: fixed; bottom: 1rem; right: 1rem; z-index: 300; }
+.btn-next { background: var(--gold); color: #fff; font-family: 'Lora', serif; font-size: .7rem; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; border: none; border-radius: 5px; padding: .7rem 1.2rem; cursor: pointer; box-shadow: 0 3px 10px rgba(184,149,106,.3); transition: background .2s, transform .15s; }
+.btn-next:hover { background: #a07d5a; transform: translateY(-2px); }
+#screen-result { display: none; padding: 1.5rem 1rem 4rem; }
+#screen-result.active { display: block; }
+.result-wrap { max-width: 500px; margin: 0 auto; }
+.result-hdr { background: var(--bg-card); border: 1px solid var(--border-soft); border-radius: 8px; padding: 1.5rem; text-align: center; margin-bottom: 1rem; position: relative; }
+.result-hdr::before { content: ''; position: absolute; top: 0; left: 1.5rem; right: 1.5rem; height: 2px; background: var(--gold); border-radius: 2px; }
+.result-hdr h1 { font-family: 'Lora', serif; font-size: 1.3rem; font-weight: 700; color: var(--text-main); margin-bottom: .25rem; }
+.result-hdr p { font-size: .8rem; color: var(--text-muted); font-style: italic; }
+.summary-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: .5rem; margin-bottom: 1rem; }
+.summary-cell { background: var(--bg-card); border: 1px solid var(--border-soft); border-radius: 6px; padding: .8rem .4rem; text-align: center; }
+.summary-cell .s-lbl { font-family: 'JetBrains Mono', monospace; font-size: .5rem; letter-spacing: .1em; text-transform: uppercase; color: var(--text-dim); margin-bottom: .35rem; }
+.summary-cell .s-val { font-family: 'Lora', serif; font-size: 1.4rem; font-weight: 700; }
+.summary-cell .s-sub { font-size: .6rem; color: var(--text-dim); margin-top: 2px; }
+.cols-grid { display: grid; grid-template-columns: 1fr 1fr; gap: .6rem; margin-bottom: 1rem; }
+.col-card { background: var(--bg-card); border: 1px solid var(--border-soft); border-left: 3px solid var(--gold); border-radius: 6px; padding: .85rem; }
+.col-card h3 { font-family: 'Lora', serif; font-size: .8rem; font-weight: 700; color: var(--gold); margin-bottom: .6rem; }
+.col-stats { display: flex; gap: .75rem; margin-bottom: .6rem; }
+.col-stats .st { font-family: 'JetBrains Mono', monospace; font-size: .56rem; color: var(--text-dim); flex: 1; }
+.col-stats .st span { display: block; font-size: 1.1rem; font-weight: 700; margin-top: 2px; }
+.col-stats .st.benar span { color: var(--success); }
+.col-stats .st.salah span { color: var(--danger); }
+.col-stats .st.skip span { color: var(--text-dim); }
+.score-track { height: 3px; background: var(--border-soft); border-radius: 2px; overflow: hidden; }
+.score-fill { height: 100%; background: linear-gradient(90deg, var(--gold-light), var(--gold)); }
+.score-pct { font-family: 'JetBrains Mono', monospace; font-size: .56rem; color: var(--text-dim); text-align: right; margin-top: 3px; }
+.btn-ulang { width: 100%; background: transparent; border: 2px solid var(--gold); color: var(--gold); font-family: 'Lora', serif; font-size: .78rem; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; padding: .85rem; border-radius: 5px; cursor: pointer; transition: all .2s; }
+.btn-ulang:hover { background: var(--gold); color: #fff; }
+.fadeup { animation: fadeup .3s ease both; }
+@keyframes fadeup { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+@media (max-width: 380px) {
+  .section { flex-direction: column; gap: .35rem; }
+  .section-label { padding-top: 0; min-width: 0; font-size: .8rem; }
+  .summary-grid { grid-template-columns: 1fr 1fr; }
+  .cols-grid { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+<header class="app-header">
+  <div class="app-logo">D'Ajiks Academy<small>Capra IPDN · Sultra</small></div>
+  <div class="app-peserta" id="hdr-peserta"></div>
+</header>
+
+<div id="screen-welcome" class="screen active">
+  <div class="welcome-wrap fadeup">
+    <div class="welcome-badge">Psiko Test · Kecermatan</div>
+    <h1 class="welcome-title">Simulasi Try Out<br>Kecermatan</h1>
+    <p class="welcome-sub">Uji kecepatan persepsi dan ketelitian visual simbol</p>
+    <div class="info-grid">
+      <div class="info-item"><div class="lbl">Tipe</div><div class="val">Simbol Hilang</div></div>
+      <div class="info-item"><div class="lbl">Kolom</div><div class="val">4 Kolom</div></div>
+      <div class="info-item"><div class="lbl">Soal/Kolom</div><div class="val">50 Butir</div></div>
+      <div class="info-item"><div class="lbl">Timer/Soal</div><div class="val">10 Detik</div></div>
+    </div>
+    <label class="field-lbl" for="nm">Nama Peserta</label>
+    <input type="text" id="nm" class="name-input" placeholder="Tulis nama lengkap..." autocomplete="off">
+    <button class="btn-start" onclick="startExam()">Mulai Simulasi →</button>
+  </div>
+</div>
+
+<div id="screen-intro" class="screen">
+  <div class="intro-wrap fadeup">
+    <div class="intro-col-tag" id="itag">Kolom 1 dari 4</div>
+    <h2 class="intro-col-title" id="ititle">Kolom I</h2>
+    <p class="intro-col-sub">Pelajari tabel kunci — akan selalu tampil saat tes</p>
+    <table class="intro-key-table" id="intro-ktable">
+      <thead><tr id="ikh"></tr></thead>
+      <tbody><tr id="ikb"></tr></tbody>
+    </table>
+    <p class="intro-note">
+      Waktu per soal: <span>10 detik</span> · Total: <strong>50 butir</strong><br>
+      Pilih simbol yang <span>tidak ada</span> pada baris soal
+    </p>
+    <button class="btn-mulai" onclick="launchColumn()">Mulai Kolom →</button>
+  </div>
+</div>
+
+<div id="screen-exam" class="screen">
+  <div class="exam-container">
+    <div class="soal-context">
+      <div class="soal-context-left">Soal <strong id="soal-num">1</strong> / 50</div>
+      <div class="soal-context-right" id="col-badge-val">Kolom I</div>
+    </div>
+    <div class="timer-wrap">
+      <div class="timer-wrap-left">
+        <span class="timer-lbl">Sisa Waktu</span>
+        <span class="timer-progress-text" id="prog-text">0 dari 50</span>
+      </div>
+      <div class="timer-num" id="timer-num">10</div>
+    </div>
+    <div class="progress-track"><div class="progress-bar" id="prog-bar"></div></div>
+    <div id="soal-card" class="fadeup">
+      <div class="section">
+        <div class="section-label">Petunjuk Soal</div>
+        <table class="kunci-table">
+          <thead><tr id="kt-head"></tr></thead>
+          <tbody><tr id="kt-body"></tr></tbody>
+        </table>
+      </div>
+      <div class="section">
+        <div class="section-label">SOAL</div>
+        <table class="soal-table"><tbody><tr id="soal-row"></tr></tbody></table>
+      </div>
+      <div class="jawaban-wrap">
+        <div class="jawaban-title">Jawaban Anda</div>
+        <div class="jawaban-list" id="jawaban-list"></div>
+      </div>
+    </div>
+  </div>
+  <div class="exam-nav">
+    <button class="btn-next" id="btn-next" onclick="nextSoal()">Berikutnya →</button>
+  </div>
+</div>
+
+<div id="screen-result" class="screen">
+  <div class="result-wrap fadeup">
+    <div class="result-hdr">
+      <h1>Hasil Try Out Kecermatan</h1>
+      <p id="res-name">—</p>
+    </div>
+    <div class="summary-grid" id="summary-grid"></div>
+    <div class="cols-grid" id="cols-grid"></div>
+    <button class="btn-ulang" onclick="resetAll()">↩ Ulangi Try Out</button>
+  </div>
+</div>
+
+<script>
+const COLUMNS = [
+  {id:1, num:"I", keys:{A:"Ж",B:"R",C:"Δ",D:"7",E:"Ω"},
+    qs:[
+      {n:1,q:"R Δ 7 Ω",a:"A"},{n:2,q:"Ж Δ 7 Ω",a:"B"},{n:3,q:"Ж R 7 Ω",a:"C"},
+      {n:4,q:"Ж R Δ Ω",a:"D"},{n:5,q:"Ж R Δ 7",a:"E"},{n:6,q:"7 Δ R Ж",a:"E"},
+      {n:7,q:"Ω Δ R Ж",a:"D"},{n:8,q:"Ω 7 R Ж",a:"C"},{n:9,q:"Ω 7 Δ Ж",a:"B"},
+      {n:10,q:"Ω 7 Δ R",a:"A"},{n:11,q:"Δ Ω R 7",a:"A"},{n:12,q:"Ω Ж 7 R",a:"C"},
+      {n:13,q:"R 7 Ж Δ",a:"E"},{n:14,q:"7 Ж Ω Δ",a:"B"},{n:15,q:"Ж Ω Δ R",a:"D"},
+      {n:16,q:"Δ R Ω Ж",a:"D"},{n:17,q:"Ω Δ Ж 7",a:"B"},{n:18,q:"7 R Ω Δ",a:"A"},
+      {n:19,q:"R 7 Ω Ж",a:"C"},{n:20,q:"Δ Ж 7 R",a:"E"},{n:21,q:"Δ Ω 7 Ж",a:"B"},
+      {n:22,q:"R Ж Ω Δ",a:"D"},{n:23,q:"Ω R 7 Δ",a:"A"},{n:24,q:"7 R Δ Ж",a:"E"},
+      {n:25,q:"Ж Ω R 7",a:"C"},{n:26,q:"7 R Ω Ж",a:"C"},{n:27,q:"Ж Δ R 7",a:"E"},
+      {n:28,q:"7 Ω Ж Δ",a:"B"},{n:29,q:"Ω Ж Δ R",a:"D"},{n:30,q:"Δ 7 R Ω",a:"A"},
+      {n:31,q:"R Δ 7 Ж",a:"E"},{n:32,q:"R Ω 7 Δ",a:"A"},{n:33,q:"Δ Ω R Ж",a:"D"},
+      {n:34,q:"Ω 7 Ж R",a:"C"},{n:35,q:"Ж 7 Ω Δ",a:"B"},{n:36,q:"Ω Δ 7 Ж",a:"B"},
+      {n:37,q:"7 Ж R Δ",a:"E"},{n:38,q:"R Ж Ω 7",a:"C"},{n:39,q:"7 Δ Ω R",a:"A"},
+      {n:40,q:"Ж R Ω Δ",a:"D"},{n:41,q:"Ω Δ Ж R",a:"D"},{n:42,q:"Δ R 7 Ω",a:"A"},
+      {n:43,q:"Ж Ω Δ 7",a:"B"},{n:44,q:"Δ 7 Ж R",a:"E"},{n:45,q:"7 Ω R Ж",a:"C"},
+      {n:46,q:"Ж 7 R Ω",a:"C"},{n:47,q:"Δ Ж 7 Ω",a:"B"},{n:48,q:"R Ж Δ 7",a:"E"},
+      {n:49,q:"R Δ Ω Ж",a:"D"},{n:50,q:"Ω 7 R Δ",a:"A"}
+    ]},
+  {id:2, num:"II", keys:{A:"8",B:"Σ",C:"V",D:"%",E:"Φ"},
+    qs:[
+      {n:1,q:"Σ V % Φ",a:"A"},{n:2,q:"8 V % Φ",a:"B"},{n:3,q:"8 Σ % Φ",a:"C"},
+      {n:4,q:"8 Σ V Φ",a:"D"},{n:5,q:"8 Σ V %",a:"E"},{n:6,q:"% V Σ 8",a:"E"},
+      {n:7,q:"Φ V Σ 8",a:"D"},{n:8,q:"Φ % Σ 8",a:"C"},{n:9,q:"Φ % V 8",a:"B"},
+      {n:10,q:"Φ % V Σ",a:"A"},{n:11,q:"V Φ Σ %",a:"A"},{n:12,q:"Φ 8 % Σ",a:"C"},
+      {n:13,q:"Σ % 8 V",a:"E"},{n:14,q:"% 8 Φ V",a:"B"},{n:15,q:"8 Φ V Σ",a:"D"},
+      {n:16,q:"V Σ Φ 8",a:"D"},{n:17,q:"Φ V 8 %",a:"B"},{n:18,q:"% Σ Φ V",a:"A"},
+      {n:19,q:"Σ % Φ 8",a:"C"},{n:20,q:"V 8 % Σ",a:"E"},{n:21,q:"V Φ % 8",a:"B"},
+      {n:22,q:"Σ 8 Φ V",a:"D"},{n:23,q:"Φ Σ % V",a:"A"},{n:24,q:"% Σ V 8",a:"E"},
+      {n:25,q:"8 Φ Σ %",a:"C"},{n:26,q:"% Σ Φ 8",a:"C"},{n:27,q:"8 V Σ %",a:"E"},
+      {n:28,q:"% Φ 8 V",a:"B"},{n:29,q:"Φ 8 V Σ",a:"D"},{n:30,q:"V % Σ Φ",a:"A"},
+      {n:31,q:"Σ V % 8",a:"E"},{n:32,q:"Σ Φ % V",a:"A"},{n:33,q:"V Φ Σ 8",a:"D"},
+      {n:34,q:"Φ % 8 Σ",a:"C"},{n:35,q:"8 % Φ V",a:"B"},{n:36,q:"Φ V % 8",a:"B"},
+      {n:37,q:"% 8 Σ V",a:"E"},{n:38,q:"Σ 8 Φ %",a:"C"},{n:39,q:"% V Φ Σ",a:"A"},
+      {n:40,q:"8 Σ Φ V",a:"D"},{n:41,q:"Φ V 8 Σ",a:"D"},{n:42,q:"V Σ % Φ",a:"A"},
+      {n:43,q:"8 Φ V %",a:"B"},{n:44,q:"V % 8 Σ",a:"E"},{n:45,q:"% Φ Σ 8",a:"C"},
+      {n:46,q:"8 % Σ Φ",a:"C"},{n:47,q:"V 8 % Φ",a:"B"},{n:48,q:"Σ 8 V %",a:"E"},
+      {n:49,q:"Σ V Φ 8",a:"D"},{n:50,q:"Φ % Σ V",a:"A"}
+    ]},
+  {id:3, num:"III", keys:{A:"Q",B:"∞",C:"4",D:"Ψ",E:"G"},
+    qs:[
+      {n:1,q:"∞ 4 Ψ G",a:"A"},{n:2,q:"Q 4 Ψ G",a:"B"},{n:3,q:"Q ∞ Ψ G",a:"C"},
+      {n:4,q:"Q ∞ 4 G",a:"D"},{n:5,q:"Q ∞ 4 Ψ",a:"E"},{n:6,q:"Ψ 4 ∞ Q",a:"E"},
+      {n:7,q:"G 4 ∞ Q",a:"D"},{n:8,q:"G Ψ ∞ Q",a:"C"},{n:9,q:"G Ψ 4 Q",a:"B"},
+      {n:10,q:"G Ψ 4 ∞",a:"A"},{n:11,q:"4 G ∞ Ψ",a:"A"},{n:12,q:"G Q Ψ ∞",a:"C"},
+      {n:13,q:"∞ Ψ Q 4",a:"E"},{n:14,q:"Ψ Q G 4",a:"B"},{n:15,q:"Q G 4 ∞",a:"D"},
+      {n:16,q:"4 ∞ G Q",a:"D"},{n:17,q:"G 4 Q Ψ",a:"B"},{n:18,q:"Ψ ∞ G 4",a:"A"},
+      {n:19,q:"∞ Ψ G Q",a:"C"},{n:20,q:"4 Q Ψ ∞",a:"E"},{n:21,q:"4 G Ψ Q",a:"B"},
+      {n:22,q:"∞ Q G 4",a:"D"},{n:23,q:"G ∞ Ψ 4",a:"A"},{n:24,q:"Ψ ∞ 4 Q",a:"E"},
+      {n:25,q:"Q G ∞ Ψ",a:"C"},{n:26,q:"Ψ ∞ G Q",a:"C"},{n:27,q:"Q 4 ∞ Ψ",a:"E"},
+      {n:28,q:"Ψ G Q 4",a:"B"},{n:29,q:"G Q 4 ∞",a:"D"},{n:30,q:"4 Ψ ∞ G",a:"A"},
+      {n:31,q:"∞ 4 Ψ Q",a:"E"},{n:32,q:"∞ G Ψ 4",a:"A"},{n:33,q:"4 G ∞ Q",a:"D"},
+      {n:34,q:"G Ψ Q ∞",a:"C"},{n:35,q:"Q Ψ G 4",a:"B"},{n:36,q:"G 4 Ψ Q",a:"B"},
+      {n:37,q:"Ψ Q ∞ 4",a:"E"},{n:38,q:"∞ Q G Ψ",a:"C"},{n:39,q:"Ψ 4 G ∞",a:"A"},
+      {n:40,q:"Q ∞ G 4",a:"D"},{n:41,q:"G 4 Q ∞",a:"D"},{n:42,q:"4 ∞ Ψ G",a:"A"},
+      {n:43,q:"Q G 4 Ψ",a:"B"},{n:44,q:"4 Ψ Q ∞",a:"E"},{n:45,q:"Ψ G ∞ Q",a:"C"},
+      {n:46,q:"Q Ψ ∞ G",a:"C"},{n:47,q:"4 Q Ψ G",a:"B"},{n:48,q:"∞ Q 4 Ψ",a:"E"},
+      {n:49,q:"∞ 4 G Q",a:"D"},{n:50,q:"G Ψ ∞ 4",a:"A"}
+    ]},
+  {id:4, num:"IV", keys:{A:"Ξ",B:"9",C:"Z",D:"£",E:"β"},
+    qs:[
+      {n:1,q:"9 Z £ β",a:"A"},{n:2,q:"Ξ Z £ β",a:"B"},{n:3,q:"Ξ 9 £ β",a:"C"},
+      {n:4,q:"Ξ 9 Z β",a:"D"},{n:5,q:"Ξ 9 Z £",a:"E"},{n:6,q:"£ Z 9 Ξ",a:"E"},
+      {n:7,q:"β Z 9 Ξ",a:"D"},{n:8,q:"β £ 9 Ξ",a:"C"},{n:9,q:"β £ Z Ξ",a:"B"},
+      {n:10,q:"β £ Z 9",a:"A"},{n:11,q:"Z β 9 £",a:"A"},{n:12,q:"β Ξ £ 9",a:"C"},
+      {n:13,q:"9 £ Ξ Z",a:"E"},{n:14,q:"£ Ξ β Z",a:"B"},{n:15,q:"Ξ β Z 9",a:"D"},
+      {n:16,q:"Z 9 β Ξ",a:"D"},{n:17,q:"β Z Ξ £",a:"B"},{n:18,q:"£ 9 β Z",a:"A"},
+      {n:19,q:"9 £ β Ξ",a:"C"},{n:20,q:"Z Ξ £ 9",a:"E"},{n:21,q:"Z β £ Ξ",a:"B"},
+      {n:22,q:"9 Ξ β Z",a:"D"},{n:23,q:"β 9 £ Z",a:"A"},{n:24,q:"£ 9 Z Ξ",a:"E"},
+      {n:25,q:"Ξ β 9 £",a:"C"},{n:26,q:"£ 9 β Ξ",a:"C"},{n:27,q:"Ξ Z 9 £",a:"E"},
+      {n:28,q:"£ β Ξ Z",a:"B"},{n:29,q:"β Ξ Z 9",a:"D"},{n:30,q:"Z £ 9 β",a:"A"},
+      {n:31,q:"9 Z £ Ξ",a:"E"},{n:32,q:"9 β £ Z",a:"A"},{n:33,q:"Z β 9 Ξ",a:"D"},
+      {n:34,q:"β £ Ξ 9",a:"C"},{n:35,q:"Ξ £ β Z",a:"B"},{n:36,q:"β Z £ Ξ",a:"B"},
+      {n:37,q:"£ Ξ 9 Z",a:"E"},{n:38,q:"9 Ξ β £",a:"C"},{n:39,q:"£ Z β 9",a:"A"},
+      {n:40,q:"Ξ 9 β Z",a:"D"},{n:41,q:"β Z Ξ 9",a:"D"},{n:42,q:"Z 9 £ β",a:"A"},
+      {n:43,q:"Ξ β Z £",a:"B"},{n:44,q:"Z £ Ξ 9",a:"E"},{n:45,q:"£ β 9 Ξ",a:"C"},
+      {n:46,q:"Ξ £ 9 β",a:"C"},{n:47,q:"Z Ξ £ β",a:"B"},{n:48,q:"9 Ξ Z £",a:"E"},
+      {n:49,q:"9 Z β Ξ",a:"D"},{n:50,q:"β £ 9 Z",a:"A"}
+    ]}
+];
+
+let S = { peserta: '', colIdx: 0, soalIdx: 0, answers: [{},{},{},{}], timer: null, secondsLeft: 10 };
+const $ = id => document.getElementById(id);
+function show(id) { document.querySelectorAll('.screen').forEach(s => s.classList.remove('active')); $(id).classList.add('active'); }
+
+function startExam() {
+  const name = $('nm').value.trim();
+  if (!name) { $('nm').focus(); $('nm').style.borderColor='var(--danger)'; return; }
+  S.peserta = name; S.colIdx = 0; S.soalIdx = 0;
+  S.answers = [{},{},{},{}];
+  $('hdr-peserta').textContent = name;
+  showIntro();
+}
+
+function showIntro() {
+  const col = COLUMNS[S.colIdx];
+  $('itag').textContent = `Kolom ${S.colIdx+1} dari ${COLUMNS.length}`;
+  $('ititle').textContent = `Kolom ${col.num}`;
+  const thead = $('ikh'), tbody = $('ikb');
+  thead.innerHTML = tbody.innerHTML = '';
+  Object.entries(col.keys).forEach(([k,v]) => {
+    const th = document.createElement('th'); th.textContent = k; thead.appendChild(th);
+    const td = document.createElement('td'); td.textContent = v; tbody.appendChild(td);
+  });
+  show('screen-intro');
+}
+
+function launchColumn() { S.soalIdx = 0; renderSoal(); show('screen-exam'); window.scrollTo(0, 0); }
+
+function renderSoal() {
+  const col = COLUMNS[S.colIdx];
+  const soal = col.qs[S.soalIdx];
+  const total = col.qs.length;
+  const done = Object.keys(S.answers[S.colIdx]).length;
+
+  $('soal-num').textContent = S.soalIdx + 1;
+  $('col-badge-val').textContent = `Kolom ${col.num}`;
+  $('prog-bar').style.width = (done / total * 100) + '%';
+  $('prog-text').textContent = `${done} dari ${total}`;
+
+  const ktHead = $('kt-head'), ktBody = $('kt-body');
+  ktHead.innerHTML = ktBody.innerHTML = '';
+  Object.entries(col.keys).forEach(([k,v]) => {
+    const th = document.createElement('th'); th.textContent = k; ktHead.appendChild(th);
+    const td = document.createElement('td'); td.textContent = v; ktBody.appendChild(td);
+  });
+
+  const soalRow = $('soal-row');
+  soalRow.innerHTML = '';
+  const syms = soal.q.split(' ');
+  // Shuffle the 4 displayed symbols (Fisher-Yates) so participant can't position-match
+  const shuffled = [...syms];
+  for (let i = shuffled.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+  }
+  // Render 4 cells (no ? marker) — table width 100% so it aligns with kunci total width
+  shuffled.forEach(sym => {
+    const td = document.createElement('td');
+    td.textContent = sym;
+    soalRow.appendChild(td);
+  });
+
+  const list = $('jawaban-list');
+  list.innerHTML = '';
+  Object.entries(col.keys).forEach(([k,v]) => {
+    const btn = document.createElement('button');
+    btn.className = 'jawaban-item';
+    btn.id = `jitem-${k}`;
+    btn.innerHTML = `<span class="radio-dot"></span><span class="j-letter">${k}</span><span class="j-sym">${v}</span>`;
+    btn.onclick = () => pickAnswer(k);
+    list.appendChild(btn);
+  });
+
+  const prev = S.answers[S.colIdx][soal.n];
+  if (prev) { const el = $(`jitem-${prev}`); if (el) el.classList.add('selected'); }
+
+  const card = $('soal-card');
+  card.classList.remove('fadeup');
+  void card.offsetWidth;
+  card.classList.add('fadeup');
+
+  startTimer();
+}
+
+function pickAnswer(letter) {
+  const col = COLUMNS[S.colIdx];
+  const soal = col.qs[S.soalIdx];
+  S.answers[S.colIdx][soal.n] = letter;
+  Object.keys(col.keys).forEach(k => { const btn = $(`jitem-${k}`); if (btn) btn.classList.remove('selected'); });
+  const sel = $(`jitem-${letter}`); if (sel) sel.classList.add('selected');
+  const done = Object.keys(S.answers[S.colIdx]).length;
+  const total = col.qs.length;
+  $('prog-bar').style.width = (done / total * 100) + '%';
+  $('prog-text').textContent = `${done} dari ${total}`;
+}
+
+function startTimer() {
+  clearInterval(S.timer);
+  S.secondsLeft = 10;
+  updateTimerDisplay();
+  S.timer = setInterval(() => {
+    S.secondsLeft--;
+    updateTimerDisplay();
+    if (S.secondsLeft <= 0) { clearInterval(S.timer); nextSoal(); }
+  }, 1000);
+}
+
+function updateTimerDisplay() {
+  const el = $('timer-num');
+  el.textContent = Math.max(0, S.secondsLeft);
+  el.className = 'timer-num';
+  if (S.secondsLeft <= 3) el.classList.add('t-danger');
+  else if (S.secondsLeft <= 5) el.classList.add('t-warn');
+}
+
+function nextSoal() {
+  clearInterval(S.timer);
+  const col = COLUMNS[S.colIdx];
+  S.soalIdx++;
+  if (S.soalIdx < col.qs.length) { renderSoal(); }
+  else {
+    S.colIdx++;
+    if (S.colIdx < COLUMNS.length) showIntro();
+    else showResult();
+  }
+}
+
+function showResult() {
+  clearInterval(S.timer);
+  let totalB=0, totalS=0, totalK=0;
+  const colsEl = $('cols-grid');
+  colsEl.innerHTML = '';
+  COLUMNS.forEach((col, i) => {
+    let b=0, s=0, k=0;
+    col.qs.forEach(q => {
+      const ans = S.answers[i][q.n];
+      if (!ans) k++; else if (ans === q.a) b++; else s++;
+    });
+    totalB+=b; totalS+=s; totalK+=k;
+    const pct = Math.round(b/col.qs.length*100);
+    const card = document.createElement('div');
+    card.className = 'col-card';
+    card.innerHTML = `<h3>Kolom ${col.num}</h3><div class="col-stats"><div class="st benar"><span>${b}</span>Benar</div><div class="st salah"><span>${s}</span>Salah</div><div class="st skip"><span>${k}</span>Skip</div></div><div class="score-track"><div class="score-fill" style="width:${pct}%"></div></div><div class="score-pct">${pct}% akurasi</div>`;
+    colsEl.appendChild(card);
+  });
+  const total = COLUMNS.length * 50;
+  const pctAll = Math.round(totalB/total*100);
+  $('summary-grid').innerHTML = `<div class="summary-cell"><div class="s-lbl">Benar</div><div class="s-val" style="color:var(--success)">${totalB}</div><div class="s-sub">dari ${total}</div></div><div class="summary-cell"><div class="s-lbl">Salah</div><div class="s-val" style="color:var(--danger)">${totalS}</div><div class="s-sub">keliru</div></div><div class="summary-cell"><div class="s-lbl">Skip</div><div class="s-val" style="color:var(--text-dim)">${totalK}</div><div class="s-sub">terlewat</div></div><div class="summary-cell"><div class="s-lbl">Akurasi</div><div class="s-val" style="color:var(--gold)">${pctAll}%</div><div class="s-sub">total</div></div>`;
+  $('res-name').textContent = `Peserta: ${S.peserta}`;
+  show('screen-result');
+  window.scrollTo(0, 0);
+}
+
+function resetAll() {
+  clearInterval(S.timer);
+  S = { peserta:'', colIdx:0, soalIdx:0, answers:[{},{},{},{}], timer:null, secondsLeft:10 };
+  $('nm').value = ''; $('nm').style.borderColor = '';
+  $('hdr-peserta').textContent = '';
+  show('screen-welcome');
+  window.scrollTo(0, 0);
+}
+</script>
+</body>
+</html>
