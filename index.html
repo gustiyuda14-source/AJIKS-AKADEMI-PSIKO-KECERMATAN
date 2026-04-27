@@ -495,6 +495,7 @@ function renderSoal() {
   const soal = col.qs[S.soalIdx];
   const total = col.qs.length;
   const done = Object.keys(S.answers[S.colIdx]).length;
+  console.log(`📄 renderSoal(${S.soalIdx + 1}/${total}) - Timer SAAT INI: ${S.secondsLeft}s`);
 
   $('soal-num').textContent = `${S.soalIdx + 1}/${total}`;
   $('col-badge-val').textContent = `Kolom ${col.num} (${S.colIdx + 1}/10)`;
@@ -560,6 +561,7 @@ function startTimer() {
   clearInterval(S.timer);
   S.secondsLeft = 60;
   updateTimerDisplay();
+  console.log('🔴 startTimer() DIPANGGIL - timer di-reset ke 60s');
   S.timer = setInterval(() => {
     S.secondsLeft--;
     updateTimerDisplay();
@@ -576,9 +578,10 @@ function updateTimerDisplay() {
 }
 
 function nextSoal() {
+  console.log(`⏭️  nextSoal() DIPANGGIL - Timer SEBELUM: ${S.secondsLeft}s`);
   const col = COLUMNS[S.colIdx];
   S.soalIdx++;
-  if (S.soalIdx < col.qs.length) { renderSoal(); console.log(`→ Soal ${S.soalIdx + 1}/${col.qs.length} (Timer tetap: ${S.secondsLeft}s)`); }
+  if (S.soalIdx < col.qs.length) { renderSoal(); }
   else { autoNextColumn(); }
 }
 
