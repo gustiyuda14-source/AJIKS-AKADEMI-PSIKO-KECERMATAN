@@ -111,16 +111,16 @@ body {
 .soal-table td { padding: .45rem .2rem; text-align: center; font-family: 'JetBrains Mono', monospace; font-size: 1.05rem; font-weight: 700; color: var(--text-main); border: 1px solid var(--border); background: var(--bg-card); height: 36px; }
 .jawaban-wrap { margin-top: 1.25rem; margin-bottom: 1.5rem; }
 .jawaban-title { font-family: 'Lora', serif; font-size: .85rem; font-weight: 600; color: var(--text-main); margin-bottom: .6rem; }
-.jawaban-list { display: flex; flex-direction: row; gap: 4px; padding-left: .25rem; flex-wrap: wrap; justify-content: flex-start; }
-.jawaban-item { display: flex; align-items: center; gap: .6rem; padding: .45rem .6rem; border: 1px solid transparent; border-radius: 4px; cursor: pointer; transition: all .15s; background: transparent; text-align: left; flex: 0 1 auto; }
+.jawaban-list { display: flex; flex-direction: row; gap: 8px; padding-left: .25rem; flex-wrap: nowrap; justify-content: space-between; align-items: center; }
+.jawaban-item { display: flex; align-items: center; gap: .5rem; padding: .45rem .5rem; border: 1px solid transparent; border-radius: 4px; cursor: pointer; transition: all .15s; background: transparent; text-align: center; flex: 1 1 auto; min-width: 50px; }
 .jawaban-item:hover { background: rgba(184,149,106,.06); border-color: var(--gold-light); }
 .jawaban-item.selected { background: rgba(184,149,106,.1); border-color: var(--gold); }
 .radio-dot { width: 14px; height: 14px; border: 1.5px solid var(--text-dim); border-radius: 50%; flex-shrink: 0; position: relative; transition: border-color .15s; }
 .jawaban-item.selected .radio-dot { border-color: var(--gold); border-width: 2px; }
 .jawaban-item.selected .radio-dot::after { content: ''; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 6px; height: 6px; background: var(--gold); border-radius: 50%; }
-.j-letter { font-family: 'Lora', serif; font-size: .85rem; font-weight: 700; color: var(--text-main); min-width: 14px; }
+.j-letter { font-family: 'Lora', serif; font-size: .8rem; font-weight: 700; color: var(--text-main); min-width: 12px; }
 .jawaban-item.selected .j-letter { color: var(--gold); }
-.j-sym { font-family: 'JetBrains Mono', monospace; font-size: .95rem; font-weight: 600; color: var(--text-muted); margin-left: auto; }
+.j-sym { font-family: 'JetBrains Mono', monospace; font-size: .9rem; font-weight: 600; color: var(--text-muted); }
 .jawaban-item.selected .j-sym { color: var(--gold); }
 .exam-nav { display: flex; justify-content: center; gap: .5rem; margin-top: .5rem; }
 .btn-next { background: var(--gold); color: #fff; font-family: 'Lora', serif; font-size: .7rem; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; border: none; border-radius: 5px; padding: .6rem 1rem; cursor: pointer; box-shadow: 0 3px 10px rgba(184,149,106,.3); transition: background .2s, transform .15s; }
@@ -154,11 +154,15 @@ body {
 .btn-ulang:hover { background: var(--gold); color: #fff; }
 .fadeup { animation: fadeup .3s ease both; }
 @keyframes fadeup { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
-@media (max-width: 380px) {
+@media (max-width: 480px) {
   .section { flex-direction: column; gap: .35rem; }
   .section-label { padding-top: 0; min-width: 0; font-size: .8rem; }
   .summary-grid { grid-template-columns: 1fr 1fr; }
   .cols-grid { grid-template-columns: 1fr; }
+  .jawaban-list { gap: 4px; }
+  .jawaban-item { padding: .35rem .35rem; gap: .3rem; }
+  .j-letter { font-size: .75rem; }
+  .j-sym { font-size: .8rem; }
 }
 </style>
 </head>
@@ -481,7 +485,7 @@ function showIntro() {
   show('screen-intro');
 }
 
-function launchColumn() { S.soalIdx = 0; renderSoal(); show('screen-exam'); window.scrollTo(0, 0); }
+function launchColumn() { S.soalIdx = 0; renderSoal(); show('screen-exam'); startTimer(); window.scrollTo(0, 0); }
 
 function renderSoal() {
   const col = COLUMNS[S.colIdx];
@@ -535,8 +539,6 @@ function renderSoal() {
   card.classList.remove('fadeup');
   void card.offsetWidth;
   card.classList.add('fadeup');
-
-  startTimer();
 }
 
 function pickAnswer(letter) {
