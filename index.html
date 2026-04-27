@@ -109,10 +109,10 @@ body {
 .kunci-table th { padding: .35rem .2rem; background: var(--bg-card); text-align: center; font-family: 'Lora', serif; font-size: .72rem; font-weight: 600; color: var(--text-main); border: 1px solid var(--border); height: 26px; }
 .kunci-table td { padding: .4rem .2rem; text-align: center; font-family: 'JetBrains Mono', monospace; font-size: 1rem; font-weight: 600; color: var(--text-main); border: 1px solid var(--border); background: var(--bg-card); height: 34px; }
 .soal-table td { padding: .45rem .2rem; text-align: center; font-family: 'JetBrains Mono', monospace; font-size: 1.05rem; font-weight: 700; color: var(--text-main); border: 1px solid var(--border); background: var(--bg-card); height: 36px; }
-.jawaban-wrap { margin-top: 1.25rem; }
+.jawaban-wrap { margin-top: 1.25rem; margin-bottom: 1.5rem; }
 .jawaban-title { font-family: 'Lora', serif; font-size: .85rem; font-weight: 600; color: var(--text-main); margin-bottom: .6rem; }
-.jawaban-list { display: flex; flex-direction: column; gap: 4px; padding-left: .25rem; }
-.jawaban-item { display: flex; align-items: center; gap: .6rem; padding: .45rem .6rem; border: 1px solid transparent; border-radius: 4px; cursor: pointer; transition: all .15s; background: transparent; width: 100%; text-align: left; }
+.jawaban-list { display: flex; flex-direction: row; gap: 4px; padding-left: .25rem; flex-wrap: wrap; justify-content: flex-start; }
+.jawaban-item { display: flex; align-items: center; gap: .6rem; padding: .45rem .6rem; border: 1px solid transparent; border-radius: 4px; cursor: pointer; transition: all .15s; background: transparent; text-align: left; flex: 0 1 auto; }
 .jawaban-item:hover { background: rgba(184,149,106,.06); border-color: var(--gold-light); }
 .jawaban-item.selected { background: rgba(184,149,106,.1); border-color: var(--gold); }
 .radio-dot { width: 14px; height: 14px; border: 1.5px solid var(--text-dim); border-radius: 50%; flex-shrink: 0; position: relative; transition: border-color .15s; }
@@ -122,9 +122,10 @@ body {
 .jawaban-item.selected .j-letter { color: var(--gold); }
 .j-sym { font-family: 'JetBrains Mono', monospace; font-size: .95rem; font-weight: 600; color: var(--text-muted); margin-left: auto; }
 .jawaban-item.selected .j-sym { color: var(--gold); }
-.exam-nav { position: fixed; bottom: 1rem; right: 1rem; z-index: 300; }
-.btn-next { background: var(--gold); color: #fff; font-family: 'Lora', serif; font-size: .7rem; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; border: none; border-radius: 5px; padding: .7rem 1.2rem; cursor: pointer; box-shadow: 0 3px 10px rgba(184,149,106,.3); transition: background .2s, transform .15s; }
+.exam-nav { display: flex; justify-content: center; gap: .5rem; margin-top: .5rem; }
+.btn-next { background: var(--gold); color: #fff; font-family: 'Lora', serif; font-size: .7rem; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; border: none; border-radius: 5px; padding: .6rem 1rem; cursor: pointer; box-shadow: 0 3px 10px rgba(184,149,106,.3); transition: background .2s, transform .15s; }
 .btn-next:hover { background: #a07d5a; transform: translateY(-2px); }
+.btn-next:disabled { background: var(--text-dim); cursor: not-allowed; opacity: .6; }
 #screen-result { display: none; padding: 1.5rem 1rem 4rem; }
 #screen-result.active { display: block; }
 .result-wrap { max-width: 500px; margin: 0 auto; }
@@ -174,9 +175,9 @@ body {
     <p class="welcome-sub">Uji kecepatan persepsi dan ketelitian visual simbol</p>
     <div class="info-grid">
       <div class="info-item"><div class="lbl">Tipe</div><div class="val">Simbol Hilang</div></div>
-      <div class="info-item"><div class="lbl">Kolom</div><div class="val">4 Kolom</div></div>
-      <div class="info-item"><div class="lbl">Soal/Kolom</div><div class="val">50 Butir</div></div>
-      <div class="info-item"><div class="lbl">Timer/Soal</div><div class="val">10 Detik</div></div>
+      <div class="info-item"><div class="lbl">Kolom</div><div class="val">10 Kolom</div></div>
+      <div class="info-item"><div class="lbl">Total Soal</div><div class="val">500 Butir</div></div>
+      <div class="info-item"><div class="lbl">Timer/Kolom</div><div class="val">1 Menit</div></div>
     </div>
     <label class="field-lbl" for="nm">Nama Peserta</label>
     <input type="text" id="nm" class="name-input" placeholder="Tulis nama lengkap..." autocomplete="off">
@@ -194,8 +195,8 @@ body {
       <tbody><tr id="ikb"></tr></tbody>
     </table>
     <p class="intro-note">
-      Waktu per soal: <span>10 detik</span> · Total: <strong>50 butir</strong><br>
-      Pilih simbol yang <span>tidak ada</span> pada baris soal
+      Waktu per kolom: <span>1 menit</span> · Total: <strong>50 butir</strong> per kolom<br>
+      Pilih simbol yang <span>tidak ada</span> pada baris soal. Waktu otomatis maju ke kolom berikutnya!
     </p>
     <button class="btn-mulai" onclick="launchColumn()">Mulai Kolom →</button>
   </div>
@@ -209,7 +210,7 @@ body {
     </div>
     <div class="timer-wrap">
       <div class="timer-wrap-left">
-        <span class="timer-lbl">Sisa Waktu</span>
+        <span class="timer-lbl">Sisa Waktu Kolom</span>
         <span class="timer-progress-text" id="prog-text">0 dari 50</span>
       </div>
       <div class="timer-num" id="timer-num">10</div>
@@ -230,11 +231,11 @@ body {
       <div class="jawaban-wrap">
         <div class="jawaban-title">Jawaban Anda</div>
         <div class="jawaban-list" id="jawaban-list"></div>
+        <div class="exam-nav">
+          <button class="btn-next" id="btn-next" onclick="nextSoal()">Berikutnya →</button>
+        </div>
       </div>
     </div>
-  </div>
-  <div class="exam-nav">
-    <button class="btn-next" id="btn-next" onclick="nextSoal()">Berikutnya →</button>
   </div>
 </div>
 
@@ -252,7 +253,7 @@ body {
 
 <script>
 const COLUMNS = [
-  {id:1, num:"I", keys:{A:"Ж",B:"R",C:"Δ",D:"7",E:"Ω"},
+  {id:1, num:"I", keys:{A:"Ж",B:"R",C:"Δ",D:"7",E:"Ω"}, difficulty:"mudah",
     qs:[
       {n:1,q:"R Δ 7 Ω",a:"A"},{n:2,q:"Ж Δ 7 Ω",a:"B"},{n:3,q:"Ж R 7 Ω",a:"C"},
       {n:4,q:"Ж R Δ Ω",a:"D"},{n:5,q:"Ж R Δ 7",a:"E"},{n:6,q:"7 Δ R Ж",a:"E"},
@@ -312,7 +313,7 @@ const COLUMNS = [
       {n:46,q:"Q Ψ ∞ G",a:"C"},{n:47,q:"4 Q Ψ G",a:"B"},{n:48,q:"∞ Q 4 Ψ",a:"E"},
       {n:49,q:"∞ 4 G Q",a:"D"},{n:50,q:"G Ψ ∞ 4",a:"A"}
     ]},
-  {id:4, num:"IV", keys:{A:"Ξ",B:"9",C:"Z",D:"£",E:"β"},
+  {id:4, num:"IV", keys:{A:"Ξ",B:"9",C:"Z",D:"£",E:"β"}, difficulty:"sedang",
     qs:[
       {n:1,q:"9 Z £ β",a:"A"},{n:2,q:"Ξ Z £ β",a:"B"},{n:3,q:"Ξ 9 £ β",a:"C"},
       {n:4,q:"Ξ 9 Z β",a:"D"},{n:5,q:"Ξ 9 Z £",a:"E"},{n:6,q:"£ Z 9 Ξ",a:"E"},
@@ -331,10 +332,130 @@ const COLUMNS = [
       {n:43,q:"Ξ β Z £",a:"B"},{n:44,q:"Z £ Ξ 9",a:"E"},{n:45,q:"£ β 9 Ξ",a:"C"},
       {n:46,q:"Ξ £ 9 β",a:"C"},{n:47,q:"Z Ξ £ β",a:"B"},{n:48,q:"9 Ξ Z £",a:"E"},
       {n:49,q:"9 Z β Ξ",a:"D"},{n:50,q:"β £ 9 Z",a:"A"}
+    ]},
+  {id:5, num:"V", keys:{A:"3",B:"¶",C:"◊",D:"∆",E:"§"}, difficulty:"sedang-sulit",
+    qs:[
+      {n:1,q:"¶ ◊ ∆ §",a:"A"},{n:2,q:"3 ◊ ∆ §",a:"B"},{n:3,q:"3 ¶ ∆ §",a:"C"},
+      {n:4,q:"3 ¶ ◊ §",a:"D"},{n:5,q:"3 ¶ ◊ ∆",a:"E"},{n:6,q:"∆ ◊ ¶ 3",a:"E"},
+      {n:7,q:"§ ◊ ¶ 3",a:"D"},{n:8,q:"§ ∆ ¶ 3",a:"C"},{n:9,q:"§ ∆ ◊ 3",a:"B"},
+      {n:10,q:"§ ∆ ◊ ¶",a:"A"},{n:11,q:"◊ § ¶ ∆",a:"A"},{n:12,q:"§ 3 ∆ ¶",a:"C"},
+      {n:13,q:"¶ ∆ 3 ◊",a:"E"},{n:14,q:"∆ 3 § ◊",a:"B"},{n:15,q:"3 § ◊ ¶",a:"D"},
+      {n:16,q:"◊ ¶ § 3",a:"D"},{n:17,q:"§ ◊ 3 ∆",a:"B"},{n:18,q:"∆ ¶ § ◊",a:"A"},
+      {n:19,q:"¶ ∆ § 3",a:"C"},{n:20,q:"◊ 3 ∆ ¶",a:"E"},{n:21,q:"◊ § ∆ 3",a:"B"},
+      {n:22,q:"¶ 3 § ◊",a:"D"},{n:23,q:"§ ¶ ∆ ◊",a:"A"},{n:24,q:"∆ ¶ ◊ 3",a:"E"},
+      {n:25,q:"3 § ¶ ∆",a:"C"},{n:26,q:"∆ ¶ § 3",a:"C"},{n:27,q:"3 ◊ ¶ ∆",a:"E"},
+      {n:28,q:"∆ § 3 ◊",a:"B"},{n:29,q:"§ 3 ◊ ¶",a:"D"},{n:30,q:"◊ ∆ ¶ §",a:"A"},
+      {n:31,q:"¶ ◊ ∆ 3",a:"E"},{n:32,q:"¶ § ∆ ◊",a:"A"},{n:33,q:"◊ § ¶ 3",a:"D"},
+      {n:34,q:"§ ∆ 3 ¶",a:"C"},{n:35,q:"3 ∆ § ◊",a:"B"},{n:36,q:"§ ◊ ∆ 3",a:"B"},
+      {n:37,q:"∆ 3 ¶ ◊",a:"E"},{n:38,q:"¶ 3 § ∆",a:"C"},{n:39,q:"∆ ◊ § ¶",a:"A"},
+      {n:40,q:"3 ¶ § ◊",a:"D"},{n:41,q:"§ ◊ 3 ¶",a:"D"},{n:42,q:"◊ ¶ ∆ §",a:"A"},
+      {n:43,q:"3 § ◊ ∆",a:"B"},{n:44,q:"◊ ∆ 3 ¶",a:"E"},{n:45,q:"∆ § ¶ 3",a:"C"},
+      {n:46,q:"3 ∆ ¶ §",a:"C"},{n:47,q:"◊ 3 ∆ §",a:"B"},{n:48,q:"¶ 3 ◊ ∆",a:"E"},
+      {n:49,q:"¶ ◊ § 3",a:"D"},{n:50,q:"§ ∆ ¶ ◊",a:"A"}
+    ]},
+  {id:6, num:"VI", keys:{A:"τ",B:"ρ",C:"ν",D:"π",E:"λ"}, difficulty:"sulit",
+    qs:[
+      {n:1,q:"ρ ν π λ",a:"A"},{n:2,q:"τ ν π λ",a:"B"},{n:3,q:"τ ρ π λ",a:"C"},
+      {n:4,q:"τ ρ ν λ",a:"D"},{n:5,q:"τ ρ ν π",a:"E"},{n:6,q:"π ν ρ τ",a:"E"},
+      {n:7,q:"λ ν ρ τ",a:"D"},{n:8,q:"λ π ρ τ",a:"C"},{n:9,q:"λ π ν τ",a:"B"},
+      {n:10,q:"λ π ν ρ",a:"A"},{n:11,q:"ν λ ρ π",a:"A"},{n:12,q:"λ τ π ρ",a:"C"},
+      {n:13,q:"ρ π τ ν",a:"E"},{n:14,q:"π τ λ ν",a:"B"},{n:15,q:"τ λ ν ρ",a:"D"},
+      {n:16,q:"ν ρ λ τ",a:"D"},{n:17,q:"λ ν τ π",a:"B"},{n:18,q:"π ρ λ ν",a:"A"},
+      {n:19,q:"ρ π λ τ",a:"C"},{n:20,q:"ν τ π ρ",a:"E"},{n:21,q:"ν λ π τ",a:"B"},
+      {n:22,q:"ρ τ λ ν",a:"D"},{n:23,q:"λ ρ π ν",a:"A"},{n:24,q:"π ρ ν τ",a:"E"},
+      {n:25,q:"τ λ ρ π",a:"C"},{n:26,q:"π ρ λ τ",a:"C"},{n:27,q:"τ ν ρ π",a:"E"},
+      {n:28,q:"π λ τ ν",a:"B"},{n:29,q:"λ τ ν ρ",a:"D"},{n:30,q:"ν π ρ λ",a:"A"},
+      {n:31,q:"ρ ν π τ",a:"E"},{n:32,q:"ρ λ π ν",a:"A"},{n:33,q:"ν λ ρ τ",a:"D"},
+      {n:34,q:"λ π τ ρ",a:"C"},{n:35,q:"τ π λ ν",a:"B"},{n:36,q:"λ ν π τ",a:"B"},
+      {n:37,q:"π τ ρ ν",a:"E"},{n:38,q:"ρ τ λ π",a:"C"},{n:39,q:"π ν λ ρ",a:"A"},
+      {n:40,q:"τ ρ λ ν",a:"D"},{n:41,q:"λ ν τ ρ",a:"D"},{n:42,q:"ν ρ π λ",a:"A"},
+      {n:43,q:"τ λ ν π",a:"B"},{n:44,q:"ν π τ ρ",a:"E"},{n:45,q:"π λ ρ τ",a:"C"},
+      {n:46,q:"τ π ρ λ",a:"C"},{n:47,q:"ν τ π λ",a:"B"},{n:48,q:"ρ τ ν π",a:"E"},
+      {n:49,q:"ρ ν λ τ",a:"D"},{n:50,q:"λ π ρ ν",a:"A"}
+    ]},
+  {id:7, num:"VII", keys:{A:"∫",B:"∂",C:"∇",D:"∑",E:"∞"}, difficulty:"sulit",
+    qs:[
+      {n:1,q:"∂ ∇ ∑ ∞",a:"A"},{n:2,q:"∫ ∇ ∑ ∞",a:"B"},{n:3,q:"∫ ∂ ∑ ∞",a:"C"},
+      {n:4,q:"∫ ∂ ∇ ∞",a:"D"},{n:5,q:"∫ ∂ ∇ ∑",a:"E"},{n:6,q:"∑ ∇ ∂ ∫",a:"E"},
+      {n:7,q:"∞ ∇ ∂ ∫",a:"D"},{n:8,q:"∞ ∑ ∂ ∫",a:"C"},{n:9,q:"∞ ∑ ∇ ∫",a:"B"},
+      {n:10,q:"∞ ∑ ∇ ∂",a:"A"},{n:11,q:"∇ ∞ ∂ ∑",a:"A"},{n:12,q:"∞ ∫ ∑ ∂",a:"C"},
+      {n:13,q:"∂ ∑ ∫ ∇",a:"E"},{n:14,q:"∑ ∫ ∞ ∇",a:"B"},{n:15,q:"∫ ∞ ∇ ∂",a:"D"},
+      {n:16,q:"∇ ∂ ∞ ∫",a:"D"},{n:17,q:"∞ ∇ ∫ ∑",a:"B"},{n:18,q:"∑ ∂ ∞ ∇",a:"A"},
+      {n:19,q:"∂ ∑ ∞ ∫",a:"C"},{n:20,q:"∇ ∫ ∑ ∂",a:"E"},{n:21,q:"∇ ∞ ∑ ∫",a:"B"},
+      {n:22,q:"∂ ∫ ∞ ∇",a:"D"},{n:23,q:"∞ ∂ ∑ ∇",a:"A"},{n:24,q:"∑ ∂ ∇ ∫",a:"E"},
+      {n:25,q:"∫ ∞ ∂ ∑",a:"C"},{n:26,q:"∑ ∂ ∞ ∫",a:"C"},{n:27,q:"∫ ∇ ∂ ∑",a:"E"},
+      {n:28,q:"∑ ∞ ∫ ∇",a:"B"},{n:29,q:"∞ ∫ ∇ ∂",a:"D"},{n:30,q:"∇ ∑ ∂ ∞",a:"A"},
+      {n:31,q:"∂ ∇ ∑ ∫",a:"E"},{n:32,q:"∂ ∞ ∑ ∇",a:"A"},{n:33,q:"∇ ∞ ∂ ∫",a:"D"},
+      {n:34,q:"∞ ∑ ∫ ∂",a:"C"},{n:35,q:"∫ ∑ ∞ ∇",a:"B"},{n:36,q:"∞ ∇ ∑ ∫",a:"B"},
+      {n:37,q:"∑ ∫ ∂ ∇",a:"E"},{n:38,q:"∂ ∫ ∞ ∑",a:"C"},{n:39,q:"∑ ∇ ∞ ∂",a:"A"},
+      {n:40,q:"∫ ∂ ∞ ∇",a:"D"},{n:41,q:"∞ ∇ ∫ ∂",a:"D"},{n:42,q:"∇ ∂ ∑ ∞",a:"A"},
+      {n:43,q:"∫ ∞ ∇ ∑",a:"B"},{n:44,q:"∇ ∑ ∫ ∂",a:"E"},{n:45,q:"∑ ∞ ∂ ∫",a:"C"},
+      {n:46,q:"∫ ∑ ∂ ∞",a:"C"},{n:47,q:"∇ ∫ ∞ ∑",a:"B"},{n:48,q:"∂ ∫ ∇ ∑",a:"E"},
+      {n:49,q:"∂ ∇ ∞ ∫",a:"D"},{n:50,q:"∞ ∑ ∂ ∇",a:"A"}
+    ]},
+  {id:8, num:"VIII", keys:{A:"◈",B:"◉",C:"◎",D:"◊",E:"○"}, difficulty:"sangat-sulit",
+    qs:[
+      {n:1,q:"◉ ◎ ◊ ○",a:"A"},{n:2,q:"◈ ◎ ◊ ○",a:"B"},{n:3,q:"◈ ◉ ◊ ○",a:"C"},
+      {n:4,q:"◈ ◉ ◎ ○",a:"D"},{n:5,q:"◈ ◉ ◎ ◊",a:"E"},{n:6,q:"◊ ◎ ◉ ◈",a:"E"},
+      {n:7,q:"○ ◎ ◉ ◈",a:"D"},{n:8,q:"○ ◊ ◉ ◈",a:"C"},{n:9,q:"○ ◊ ◎ ◈",a:"B"},
+      {n:10,q:"○ ◊ ◎ ◉",a:"A"},{n:11,q:"◎ ○ ◉ ◊",a:"A"},{n:12,q:"○ ◈ ◊ ◉",a:"C"},
+      {n:13,q:"◉ ◊ ◈ ◎",a:"E"},{n:14,q:"◊ ◈ ○ ◎",a:"B"},{n:15,q:"◈ ○ ◎ ◉",a:"D"},
+      {n:16,q:"◎ ◉ ○ ◈",a:"D"},{n:17,q:"○ ◎ ◈ ◊",a:"B"},{n:18,q:"◊ ◉ ○ ◎",a:"A"},
+      {n:19,q:"◉ ◊ ○ ◈",a:"C"},{n:20,q:"◎ ◈ ◊ ◉",a:"E"},{n:21,q:"◎ ○ ◊ ◈",a:"B"},
+      {n:22,q:"◉ ◈ ○ ◎",a:"D"},{n:23,q:"○ ◉ ◊ ◎",a:"A"},{n:24,q:"◊ ◉ ◎ ◈",a:"E"},
+      {n:25,q:"◈ ○ ◉ ◊",a:"C"},{n:26,q:"◊ ◉ ○ ◈",a:"C"},{n:27,q:"◈ ◎ ◉ ◊",a:"E"},
+      {n:28,q:"◊ ○ ◈ ◎",a:"B"},{n:29,q:"○ ◈ ◎ ◉",a:"D"},{n:30,q:"◎ ◊ ◉ ○",a:"A"},
+      {n:31,q:"◉ ◎ ◊ ◈",a:"E"},{n:32,q:"◉ ○ ◊ ◎",a:"A"},{n:33,q:"◎ ○ ◉ ◈",a:"D"},
+      {n:34,q:"○ ◊ ◈ ◉",a:"C"},{n:35,q:"◈ ◊ ○ ◎",a:"B"},{n:36,q:"○ ◎ ◊ ◈",a:"B"},
+      {n:37,q:"◊ ◈ ◉ ◎",a:"E"},{n:38,q:"◉ ◈ ○ ◊",a:"C"},{n:39,q:"◊ ◎ ○ ◉",a:"A"},
+      {n:40,q:"◈ ◉ ○ ◎",a:"D"},{n:41,q:"○ ◎ ◈ ◉",a:"D"},{n:42,q:"◎ ◉ ◊ ○",a:"A"},
+      {n:43,q:"◈ ○ ◎ ◊",a:"B"},{n:44,q:"◎ ◊ ◈ ◉",a:"E"},{n:45,q:"◊ ○ ◉ ◈",a:"C"},
+      {n:46,q:"◈ ◊ ◉ ○",a:"C"},{n:47,q:"◎ ◈ ○ ◊",a:"B"},{n:48,q:"◉ ◈ ◎ ◊",a:"E"},
+      {n:49,q:"◉ ◎ ○ ◈",a:"D"},{n:50,q:"○ ◊ ◉ ◎",a:"A"}
+    ]},
+  {id:9, num:"IX", keys:{A:"Ψ",B:"Ʃ",C:"Ħ",D:"Ɔ",E:"ℜ"}, difficulty:"sangat-sulit",
+    qs:[
+      {n:1,q:"Ʃ Ħ Ɔ ℜ",a:"A"},{n:2,q:"Ψ Ħ Ɔ ℜ",a:"B"},{n:3,q:"Ψ Ʃ Ɔ ℜ",a:"C"},
+      {n:4,q:"Ψ Ʃ Ħ ℜ",a:"D"},{n:5,q:"Ψ Ʃ Ħ Ɔ",a:"E"},{n:6,q:"Ɔ Ħ Ʃ Ψ",a:"E"},
+      {n:7,q:"ℜ Ħ Ʃ Ψ",a:"D"},{n:8,q:"ℜ Ɔ Ʃ Ψ",a:"C"},{n:9,q:"ℜ Ɔ Ħ Ψ",a:"B"},
+      {n:10,q:"ℜ Ɔ Ħ Ʃ",a:"A"},{n:11,q:"Ħ ℜ Ʃ Ɔ",a:"A"},{n:12,q:"ℜ Ψ Ɔ Ʃ",a:"C"},
+      {n:13,q:"Ʃ Ɔ Ψ Ħ",a:"E"},{n:14,q:"Ɔ Ψ ℜ Ħ",a:"B"},{n:15,q:"Ψ ℜ Ħ Ʃ",a:"D"},
+      {n:16,q:"Ħ Ʃ ℜ Ψ",a:"D"},{n:17,q:"ℜ Ħ Ψ Ɔ",a:"B"},{n:18,q:"Ɔ Ʃ ℜ Ħ",a:"A"},
+      {n:19,q:"Ʃ Ɔ ℜ Ψ",a:"C"},{n:20,q:"Ħ Ψ Ɔ Ʃ",a:"E"},{n:21,q:"Ħ ℜ Ɔ Ψ",a:"B"},
+      {n:22,q:"Ʃ Ψ ℜ Ħ",a:"D"},{n:23,q:"ℜ Ʃ Ɔ Ħ",a:"A"},{n:24,q:"Ɔ Ʃ Ħ Ψ",a:"E"},
+      {n:25,q:"Ψ ℜ Ʃ Ɔ",a:"C"},{n:26,q:"Ɔ Ʃ ℜ Ψ",a:"C"},{n:27,q:"Ψ Ħ Ʃ Ɔ",a:"E"},
+      {n:28,q:"Ɔ ℜ Ψ Ħ",a:"B"},{n:29,q:"ℜ Ψ Ħ Ʃ",a:"D"},{n:30,q:"Ħ Ɔ Ʃ ℜ",a:"A"},
+      {n:31,q:"Ʃ Ħ Ɔ Ψ",a:"E"},{n:32,q:"Ʃ ℜ Ɔ Ħ",a:"A"},{n:33,q:"Ħ ℜ Ʃ Ψ",a:"D"},
+      {n:34,q:"ℜ Ɔ Ψ Ʃ",a:"C"},{n:35,q:"Ψ Ɔ ℜ Ħ",a:"B"},{n:36,q:"ℜ Ħ Ɔ Ψ",a:"B"},
+      {n:37,q:"Ɔ Ψ Ʃ Ħ",a:"E"},{n:38,q:"Ʃ Ψ ℜ Ɔ",a:"C"},{n:39,q:"Ɔ Ħ ℜ Ʃ",a:"A"},
+      {n:40,q:"Ψ Ʃ ℜ Ħ",a:"D"},{n:41,q:"ℜ Ħ Ψ Ɔ",a:"D"},{n:42,q:"Ħ Ʃ Ɔ ℜ",a:"A"},
+      {n:43,q:"Ψ ℜ Ħ Ɔ",a:"B"},{n:44,q:"Ħ Ɔ Ψ Ʃ",a:"E"},{n:45,q:"Ɔ ℜ Ʃ Ψ",a:"C"},
+      {n:46,q:"Ψ Ɔ Ʃ ℜ",a:"C"},{n:47,q:"Ħ Ψ ℜ Ɔ",a:"B"},{n:48,q:"Ʃ Ψ Ħ Ɔ",a:"E"},
+      {n:49,q:"Ʃ Ħ ℜ Ψ",a:"D"},{n:50,q:"ℜ Ɔ Ʃ Ħ",a:"A"}
+    ]},
+  {id:10, num:"X", keys:{A:"ǫ",B:"ɓ",C:"ƈ",D:"ɖ",E:"ɛ"}, difficulty:"ekstrim",
+    qs:[
+      {n:1,q:"ɓ ƈ ɖ ɛ",a:"A"},{n:2,q:"ǫ ƈ ɖ ɛ",a:"B"},{n:3,q:"ǫ ɓ ɖ ɛ",a:"C"},
+      {n:4,q:"ǫ ɓ ƈ ɛ",a:"D"},{n:5,q:"ǫ ɓ ƈ ɖ",a:"E"},{n:6,q:"ɖ ƈ ɓ ǫ",a:"E"},
+      {n:7,q:"ɛ ƈ ɓ ǫ",a:"D"},{n:8,q:"ɛ ɖ ɓ ǫ",a:"C"},{n:9,q:"ɛ ɖ ƈ ǫ",a:"B"},
+      {n:10,q:"ɛ ɖ ƈ ɓ",a:"A"},{n:11,q:"ƈ ɛ ɓ ɖ",a:"A"},{n:12,q:"ɛ ǫ ɖ ɓ",a:"C"},
+      {n:13,q:"ɓ ɖ ǫ ƈ",a:"E"},{n:14,q:"ɖ ǫ ɛ ƈ",a:"B"},{n:15,q:"ǫ ɛ ƈ ɓ",a:"D"},
+      {n:16,q:"ƈ ɓ ɛ ǫ",a:"D"},{n:17,q:"ɛ ƈ ǫ ɖ",a:"B"},{n:18,q:"ɖ ɓ ɛ ƈ",a:"A"},
+      {n:19,q:"ɓ ɖ ɛ ǫ",a:"C"},{n:20,q:"ƈ ǫ ɖ ɓ",a:"E"},{n:21,q:"ƈ ɛ ɖ ǫ",a:"B"},
+      {n:22,q:"ɓ ǫ ɛ ƈ",a:"D"},{n:23,q:"ɛ ɓ ɖ ƈ",a:"A"},{n:24,q:"ɖ ɓ ƈ ǫ",a:"E"},
+      {n:25,q:"ǫ ɛ ɓ ɖ",a:"C"},{n:26,q:"ɖ ɓ ɛ ǫ",a:"C"},{n:27,q:"ǫ ƈ ɓ ɖ",a:"E"},
+      {n:28,q:"ɖ ɛ ǫ ƈ",a:"B"},{n:29,q:"ɛ ǫ ƈ ɓ",a:"D"},{n:30,q:"ƈ ɖ ɓ ɛ",a:"A"},
+      {n:31,q:"ɓ ƈ ɖ ǫ",a:"E"},{n:32,q:"ɓ ɛ ɖ ƈ",a:"A"},{n:33,q:"ƈ ɛ ɓ ǫ",a:"D"},
+      {n:34,q:"ɛ ɖ ǫ ɓ",a:"C"},{n:35,q:"ǫ ɖ ɛ ƈ",a:"B"},{n:36,q:"ɛ ƈ ɖ ǫ",a:"B"},
+      {n:37,q:"ɖ ǫ ɓ ƈ",a:"E"},{n:38,q:"ɓ ǫ ɛ ɖ",a:"C"},{n:39,q:"ɖ ƈ ɛ ɓ",a:"A"},
+      {n:40,q:"ǫ ɓ ɛ ƈ",a:"D"},{n:41,q:"ɛ ƈ ǫ ɓ",a:"D"},{n:42,q:"ƈ ɓ ɖ ɛ",a:"A"},
+      {n:43,q:"ǫ ɛ ƈ ɖ",a:"B"},{n:44,q:"ƈ ɖ ǫ ɓ",a:"E"},{n:45,q:"ɖ ɛ ɓ ǫ",a:"C"},
+      {n:46,q:"ǫ ɖ ɓ ɛ",a:"C"},{n:47,q:"ƈ ǫ ɛ ɖ",a:"B"},{n:48,q:"ɓ ǫ ƈ ɖ",a:"E"},
+      {n:49,q:"ɓ ƈ ɛ ǫ",a:"D"},{n:50,q:"ɛ ɖ ɓ ƈ",a:"A"}
     ]}
 ];
 
-let S = { peserta: '', colIdx: 0, soalIdx: 0, answers: [{},{},{},{}], timer: null, secondsLeft: 10 };
+let S = { peserta: '', colIdx: 0, soalIdx: 0, answers: Array(10).fill(null).map(() => ({})), timer: null, secondsLeft: 60, isAutoNext: false };
 const $ = id => document.getElementById(id);
 function show(id) { document.querySelectorAll('.screen').forEach(s => s.classList.remove('active')); $(id).classList.add('active'); }
 
@@ -342,14 +463,14 @@ function startExam() {
   const name = $('nm').value.trim();
   if (!name) { $('nm').focus(); $('nm').style.borderColor='var(--danger)'; return; }
   S.peserta = name; S.colIdx = 0; S.soalIdx = 0;
-  S.answers = [{},{},{},{}];
+  S.answers = Array(10).fill(null).map(() => ({}));
   $('hdr-peserta').textContent = name;
   showIntro();
 }
 
 function showIntro() {
   const col = COLUMNS[S.colIdx];
-  $('itag').textContent = `Kolom ${S.colIdx+1} dari ${COLUMNS.length}`;
+  $('itag').textContent = `Kolom ${S.colIdx+1} dari 10`;
   $('ititle').textContent = `Kolom ${col.num}`;
   const thead = $('ikh'), tbody = $('ikb');
   thead.innerHTML = tbody.innerHTML = '';
@@ -368,10 +489,10 @@ function renderSoal() {
   const total = col.qs.length;
   const done = Object.keys(S.answers[S.colIdx]).length;
 
-  $('soal-num').textContent = S.soalIdx + 1;
-  $('col-badge-val').textContent = `Kolom ${col.num}`;
+  $('soal-num').textContent = `${S.soalIdx + 1}/${total}`;
+  $('col-badge-val').textContent = `Kolom ${col.num} (${S.colIdx + 1}/10)`;
   $('prog-bar').style.width = (done / total * 100) + '%';
-  $('prog-text').textContent = `${done} dari ${total}`;
+  $('prog-text').textContent = `Kolom: ${done}/${total}`;
 
   const ktHead = $('kt-head'), ktBody = $('kt-body');
   ktHead.innerHTML = ktBody.innerHTML = '';
@@ -432,12 +553,12 @@ function pickAnswer(letter) {
 
 function startTimer() {
   clearInterval(S.timer);
-  S.secondsLeft = 10;
+  S.secondsLeft = 60;
   updateTimerDisplay();
   S.timer = setInterval(() => {
     S.secondsLeft--;
     updateTimerDisplay();
-    if (S.secondsLeft <= 0) { clearInterval(S.timer); nextSoal(); }
+    if (S.secondsLeft <= 0) { clearInterval(S.timer); autoNextColumn(); }
   }, 1000);
 }
 
@@ -450,14 +571,22 @@ function updateTimerDisplay() {
 }
 
 function nextSoal() {
-  clearInterval(S.timer);
   const col = COLUMNS[S.colIdx];
   S.soalIdx++;
   if (S.soalIdx < col.qs.length) { renderSoal(); }
-  else {
-    S.colIdx++;
-    if (S.colIdx < COLUMNS.length) showIntro();
-    else showResult();
+  else { autoNextColumn(); }
+}
+
+function autoNextColumn() {
+  clearInterval(S.timer);
+  S.colIdx++;
+  if (S.colIdx < 10) {
+    S.soalIdx = 0;
+    S.isAutoNext = true;
+    show('screen-intro');
+    setTimeout(() => { launchColumn(); }, 5000);
+  } else {
+    showResult();
   }
 }
 
@@ -479,17 +608,20 @@ function showResult() {
     card.innerHTML = `<h3>Kolom ${col.num}</h3><div class="col-stats"><div class="st benar"><span>${b}</span>Benar</div><div class="st salah"><span>${s}</span>Salah</div><div class="st skip"><span>${k}</span>Skip</div></div><div class="score-track"><div class="score-fill" style="width:${pct}%"></div></div><div class="score-pct">${pct}% akurasi</div>`;
     colsEl.appendChild(card);
   });
-  const total = COLUMNS.length * 50;
-  const pctAll = Math.round(totalB/total*100);
-  $('summary-grid').innerHTML = `<div class="summary-cell"><div class="s-lbl">Benar</div><div class="s-val" style="color:var(--success)">${totalB}</div><div class="s-sub">dari ${total}</div></div><div class="summary-cell"><div class="s-lbl">Salah</div><div class="s-val" style="color:var(--danger)">${totalS}</div><div class="s-sub">keliru</div></div><div class="summary-cell"><div class="s-lbl">Skip</div><div class="s-val" style="color:var(--text-dim)">${totalK}</div><div class="s-sub">terlewat</div></div><div class="summary-cell"><div class="s-lbl">Akurasi</div><div class="s-val" style="color:var(--gold)">${pctAll}%</div><div class="s-sub">total</div></div>`;
-  $('res-name').textContent = `Peserta: ${S.peserta}`;
+  const totalSoal = 500;
+  const scoreRaw = totalB * 0.2;
+  const scoreStatus = scoreRaw >= 61 ? 'MS (Memenuhi Syarat)' : 'TMS (Tidak Memenuhi Syarat)';
+  const scoreColor = scoreRaw >= 61 ? 'var(--success)' : 'var(--danger)';
+  const category = scoreRaw < 40 ? 'Kurang Sekali' : scoreRaw < 61 ? 'Kurang' : scoreRaw < 80 ? 'Cukup' : 'Baik';
+  $('summary-grid').innerHTML = `<div class="summary-cell"><div class="s-lbl">Benar</div><div class="s-val" style="color:var(--success)">${totalB}</div><div class="s-sub">dari ${totalSoal}</div></div><div class="summary-cell"><div class="s-lbl">Salah</div><div class="s-val" style="color:var(--danger)">${totalS}</div><div class="s-sub">keliru</div></div><div class="summary-cell"><div class="s-lbl">Skip</div><div class="s-val" style="color:var(--text-dim)">${totalK}</div><div class="s-sub">terlewat</div></div><div class="summary-cell"><div class="s-lbl">Nilai</div><div class="s-val" style="color:${scoreColor}">${scoreRaw.toFixed(1)}</div><div class="s-sub">${category}</div></div>`;
+  $('res-name').innerHTML = `<strong>Peserta: ${S.peserta}</strong><br><span style="font-size:.85rem">Status: <span style="color:${scoreColor}">${scoreStatus}</span></span>`;
   show('screen-result');
   window.scrollTo(0, 0);
 }
 
 function resetAll() {
   clearInterval(S.timer);
-  S = { peserta:'', colIdx:0, soalIdx:0, answers:[{},{},{},{}], timer:null, secondsLeft:10 };
+  S = { peserta:'', colIdx:0, soalIdx:0, answers:Array(10).fill(null).map(() => ({})), timer:null, secondsLeft:60, isAutoNext:false };
   $('nm').value = ''; $('nm').style.borderColor = '';
   $('hdr-peserta').textContent = '';
   show('screen-welcome');
