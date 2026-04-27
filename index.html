@@ -462,7 +462,7 @@ const COLUMNS = [
     ]}
 ];
 
-let S = { peserta: '', colIdx: 0, soalIdx: 0, answers: Array(10).fill(null).map(() => ({})), timer: null, secondsLeft: 60, isAutoNext: false };
+let S = { peserta: '', colIdx: 0, soalIdx: 0, answers: Array(10).fill(null).map(() => ({})), timer: null, secondsLeft: 60, isAutoNext: false, timerRunning: false };
 const $ = id => document.getElementById(id);
 function show(id) { document.querySelectorAll('.screen').forEach(s => s.classList.remove('active')); $(id).classList.add('active'); }
 
@@ -558,14 +558,24 @@ function pickAnswer(letter) {
 }
 
 function startTimer() {
+  if (S.timerRunning) {
+    console.log('⚠️  Timer sudah berjalan, diabaikan');
+    return;
+  }
   clearInterval(S.timer);
   S.secondsLeft = 60;
+  S.timerRunning = true;
   updateTimerDisplay();
-  console.log('🔴 startTimer() DIPANGGIL - timer di-reset ke 60s');
+  console.log('🟢 startTimer() - Timer MULAI: 60s countdown dimulai');
   S.timer = setInterval(() => {
     S.secondsLeft--;
     updateTimerDisplay();
-    if (S.secondsLeft <= 0) { clearInterval(S.timer); autoNextColumn(); }
+    if (S.secondsLeft <= 0) {
+      clearInterval(S.timer);
+      S.timerRunning = false;
+      console.log('⏹️  Timer habis, autoNextColumn() dipanggil');
+      autoNextColumn();
+    }
   }, 1000);
 }
 
@@ -587,11 +597,13 @@ function nextSoal() {
 
 function autoNextColumn() {
   clearInterval(S.timer);
+  S.timerRunning = false;
   S.colIdx++;
   if (S.colIdx < 10) {
     S.soalIdx = 0;
     S.isAutoNext = true;
     show('screen-intro');
+    console.log(`⏸️  Jeda 5 detik sebelum Kolom ${S.colIdx + 1}`);
     setTimeout(() => { launchColumn(); }, 5000);
   } else {
     showResult();
@@ -629,7 +641,7 @@ function showResult() {
 
 function resetAll() {
   clearInterval(S.timer);
-  S = { peserta:'', colIdx:0, soalIdx:0, answers:Array(10).fill(null).map(() => ({})), timer:null, secondsLeft:60, isAutoNext:false };
+  S = { peserta:'', colIdx:0, soalIdx:0, answers:Array(10).fill(null).map(() => ({})), timer:null, secondsLeft:60, isAutoNext:false, timerRunning:false };
   $('nm').value = ''; $('nm').style.borderColor = '';
   $('hdr-peserta').textContent = '';
   show('screen-welcome');
