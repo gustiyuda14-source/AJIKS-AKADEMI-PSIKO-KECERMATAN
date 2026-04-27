@@ -581,7 +581,7 @@ function autoNextColumn() {
   if (S.colIdx < 10) {
     S.soalIdx = 0;
     S.isAutoNext = true;
-    show('screen-intro');
+    showIntro();
     setTimeout(() => { launchColumn(); }, 5000);
   } else {
     showResult();
