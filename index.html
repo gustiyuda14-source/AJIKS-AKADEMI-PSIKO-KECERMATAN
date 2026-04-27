@@ -3,6 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
 <title>D'Ajiks Academy — Kecermatan Psiko-CAT</title>
 <link href="https://fonts.googleapis.com/css2?family=Lora:wght@400;600;700&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
 <style>
@@ -485,7 +488,7 @@ function showIntro() {
   show('screen-intro');
 }
 
-function launchColumn() { S.soalIdx = 0; renderSoal(); show('screen-exam'); startTimer(); window.scrollTo(0, 0); }
+function launchColumn() { S.soalIdx = 0; renderSoal(); show('screen-exam'); startTimer(); console.log('✓ launchColumn: Timer dimulai untuk Kolom', S.colIdx + 1); window.scrollTo(0, 0); }
 
 function renderSoal() {
   const col = COLUMNS[S.colIdx];
@@ -575,7 +578,7 @@ function updateTimerDisplay() {
 function nextSoal() {
   const col = COLUMNS[S.colIdx];
   S.soalIdx++;
-  if (S.soalIdx < col.qs.length) { renderSoal(); }
+  if (S.soalIdx < col.qs.length) { renderSoal(); console.log(`→ Soal ${S.soalIdx + 1}/${col.qs.length} (Timer tetap: ${S.secondsLeft}s)`); }
   else { autoNextColumn(); }
 }
 
