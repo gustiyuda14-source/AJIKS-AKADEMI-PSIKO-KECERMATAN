@@ -123,6 +123,7 @@ body {
 .j-sym { font-family: 'JetBrains Mono', monospace; font-size: .95rem; font-weight: 600; color: var(--text-muted); margin-left: auto; }
 .jawaban-item.selected .j-sym { color: var(--gold); }
 .exam-nav { display: flex; justify-content: center; gap: .8rem; margin-top: .75rem; flex-wrap: wrap; }
+.exam-finish-wrap { display: flex; justify-content: center; margin-top: 2rem; }
 .btn-next { background: var(--gold); color: #fff; font-family: 'Lora', serif; font-size: .7rem; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; border: none; border-radius: 5px; padding: .6rem 1rem; cursor: pointer; box-shadow: 0 3px 10px rgba(184,149,106,.3); transition: background .2s, transform .15s; }
 .btn-next:hover { background: #a07d5a; transform: translateY(-2px); }
 .btn-next:disabled { background: var(--text-dim); cursor: not-allowed; opacity: .6; }
@@ -251,6 +252,8 @@ body {
         <div class="jawaban-list" id="jawaban-list"></div>
         <div class="exam-nav">
           <button class="btn-next" id="btn-next" onclick="nextSoal()">Berikutnya →</button>
+        </div>
+        <div class="exam-finish-wrap">
           <button class="btn-finish" onclick="earlySubmit()">⏹ Selesai Ujian</button>
         </div>
       </div>
