@@ -11,7 +11,6 @@
   --bg-card:      #ffffff;
   --bg-hover:     #e8ecf1;
   --bg-row:       #fafbfc;
-  --bg-timer:     #e0e8f0;
   --gold:         #b8956a;
   --gold-warn:    #d4821e;
   --gold-light:   #e8c8a0;
@@ -93,14 +92,6 @@ body {
 .soal-context-left { font-family: 'JetBrains Mono', monospace; font-size: .6rem; color: var(--text-dim); letter-spacing: .08em; text-transform: uppercase; }
 .soal-context-left strong { color: var(--gold); font-weight: 700; }
 .soal-context-right { font-family: 'Lora', serif; font-size: .75rem; color: var(--gold); font-weight: 600; }
-.timer-wrap { background: var(--bg-timer); border: 1px solid var(--border); border-radius: 6px; padding: .875rem 1rem; display: flex; align-items: center; justify-content: space-between; margin-bottom: 1rem; }
-.timer-wrap-left { display: flex; flex-direction: column; gap: 2px; }
-.timer-lbl { font-family: 'JetBrains Mono', monospace; font-size: .55rem; letter-spacing: .14em; text-transform: uppercase; color: var(--text-muted); }
-.timer-progress-text { font-family: 'JetBrains Mono', monospace; font-size: .68rem; color: var(--text-main); font-weight: 600; }
-.timer-num { font-family: 'JetBrains Mono', monospace; font-size: 2rem; font-weight: 700; line-height: 1; color: var(--text-main); transition: color .3s; letter-spacing: .02em; min-width: 50px; text-align: right; }
-.timer-num.t-warn { color: var(--gold-warn); }
-.timer-num.t-danger { color: var(--danger); animation: blink .5s infinite; }
-@keyframes blink { 0%,100%{opacity:1} 50%{opacity:.5} }
 .progress-track { height: 3px; background: var(--border-soft); border-radius: 2px; overflow: hidden; margin-bottom: 1rem; }
 .progress-bar { height: 100%; background: linear-gradient(90deg, var(--gold-light), var(--gold)); transition: width .4s ease; width: 0%; }
 .section { display: flex; align-items: flex-start; gap: .75rem; margin-bottom: 1rem; }
@@ -196,7 +187,7 @@ body {
       <div class="info-item"><div class="lbl">Tipe</div><div class="val">Simbol Hilang</div></div>
       <div class="info-item"><div class="lbl">Kolom</div><div class="val">10 Kolom</div></div>
       <div class="info-item"><div class="lbl">Total Soal</div><div class="val">500 Butir</div></div>
-      <div class="info-item"><div class="lbl">Timer/Kolom</div><div class="val">1 Menit</div></div>
+      <div class="info-item"><div class="lbl">Mode</div><div class="val">Latihan Bebas</div></div>
     </div>
     <label class="field-lbl" for="nm">Nama Peserta</label>
     <input type="text" id="nm" class="name-input" placeholder="Tulis nama lengkap..." autocomplete="off">
@@ -214,8 +205,8 @@ body {
       <tbody><tr id="ikb"></tr></tbody>
     </table>
     <p class="intro-note">
-      Waktu per kolom: <span>1 menit</span> · Total: <strong>50 butir</strong> per kolom<br>
-      Pilih simbol yang <span>tidak ada</span> pada baris soal. Waktu otomatis maju ke kolom berikutnya!
+      Total: <strong>50 butir</strong> per kolom<br>
+      Pilih simbol yang <span>tidak ada</span> pada baris soal. Kerjakan semua soal lalu lanjut ke kolom berikutnya.
     </p>
     <button class="btn-mulai" onclick="launchColumn()">Mulai Kolom →</button>
   </div>
@@ -226,13 +217,6 @@ body {
     <div class="soal-context">
       <div class="soal-context-left">Soal <strong id="soal-num">1</strong> / 50</div>
       <div class="soal-context-right" id="col-badge-val">Kolom I</div>
-    </div>
-    <div class="timer-wrap">
-      <div class="timer-wrap-left">
-        <span class="timer-lbl">Sisa Waktu Kolom</span>
-        <span class="timer-progress-text" id="prog-text">0 dari 50</span>
-      </div>
-      <div class="timer-num" id="timer-num">10</div>
     </div>
     <div class="progress-track"><div class="progress-bar" id="prog-bar"></div></div>
     <div id="soal-card" class="fadeup">
@@ -499,7 +483,7 @@ const COLUMNS = [
     ]}
 ];
 
-let S = { peserta: '', colIdx: 0, soalIdx: 0, answers: Array(10).fill(null).map(() => ({})), timer: null, secondsLeft: 60, isAutoNext: false };
+let S = { peserta: '', colIdx: 0, soalIdx: 0, answers: Array(10).fill(null).map(() => ({})) };
 const $ = id => document.getElementById(id);
 function show(id) { document.querySelectorAll('.screen').forEach(s => s.classList.remove('active')); $(id).classList.add('active'); }
 
@@ -525,7 +509,7 @@ function showIntro() {
   show('screen-intro');
 }
 
-function launchColumn() { S.soalIdx = 0; S.secondsLeft = 60; startTimer(); renderSoal(); show('screen-exam'); window.scrollTo(0, 0); }
+function launchColumn() { S.soalIdx = 0; renderSoal(); show('screen-exam'); window.scrollTo(0, 0); }
 
 function renderSoal() {
   const col = COLUMNS[S.colIdx];
@@ -536,7 +520,6 @@ function renderSoal() {
   $('soal-num').textContent = `${S.soalIdx + 1}/${total}`;
   $('col-badge-val').textContent = `Kolom ${col.num} (${S.colIdx + 1}/10)`;
   $('prog-bar').style.width = (done / total * 100) + '%';
-  $('prog-text').textContent = `Kolom: ${done}/${total}`;
 
   const ktHead = $('kt-head'), ktBody = $('kt-body');
   ktHead.innerHTML = ktBody.innerHTML = '';
@@ -590,27 +573,8 @@ function pickAnswer(letter) {
   const done = Object.keys(S.answers[S.colIdx]).length;
   const total = col.qs.length;
   $('prog-bar').style.width = (done / total * 100) + '%';
-  $('prog-text').textContent = `${done} dari ${total}`;
 }
 
-function startTimer() {
-  clearInterval(S.timer);
-  S.secondsLeft = 60;
-  updateTimerDisplay();
-  S.timer = setInterval(() => {
-    S.secondsLeft--;
-    updateTimerDisplay();
-    if (S.secondsLeft <= 0) { clearInterval(S.timer); autoNextColumn(); }
-  }, 1000);
-}
-
-function updateTimerDisplay() {
-  const el = $('timer-num');
-  el.textContent = Math.max(0, S.secondsLeft);
-  el.className = 'timer-num';
-  if (S.secondsLeft <= 3) el.classList.add('t-danger');
-  else if (S.secondsLeft <= 5) el.classList.add('t-warn');
-}
 
 function nextSoal() {
   const col = COLUMNS[S.colIdx];
@@ -620,20 +584,16 @@ function nextSoal() {
 }
 
 function autoNextColumn() {
-  clearInterval(S.timer);
   S.colIdx++;
   if (S.colIdx < 10) {
     S.soalIdx = 0;
-    S.isAutoNext = true;
     showIntro();
-    setTimeout(() => { launchColumn(); }, 5000);
   } else {
     showResult();
   }
 }
 
 function showResult() {
-  clearInterval(S.timer);
   let totalB=0, totalS=0, totalK=0;
   const colsEl = $('cols-grid');
   colsEl.innerHTML = '';
@@ -662,7 +622,6 @@ function showResult() {
 }
 
 function earlySubmit() {
-  clearInterval(S.timer);
   let totalAnswered = 0, totalSkipped = 0;
   for (let i = 0; i <= S.colIdx; i++) {
     Object.keys(S.answers[i]).forEach(k => { totalAnswered++; });
@@ -677,21 +636,17 @@ function earlySubmit() {
 }
 
 function confirmFinalSubmit() {
-  clearInterval(S.timer);
   showResult();
 }
 
 function cancelEarlySubmit() {
-  S.secondsLeft = Math.max(1, S.secondsLeft);
   renderSoal();
   show('screen-exam');
-  startTimer();
   window.scrollTo(0, 0);
 }
 
 function resetAll() {
-  clearInterval(S.timer);
-  S = { peserta:'', colIdx:0, soalIdx:0, answers:Array(10).fill(null).map(() => ({})), timer:null, secondsLeft:60, isAutoNext:false };
+  S = { peserta:'', colIdx:0, soalIdx:0, answers:Array(10).fill(null).map(() => ({})) };
   $('nm').value = ''; $('nm').style.borderColor = '';
   $('hdr-peserta').textContent = '';
   show('screen-welcome');
