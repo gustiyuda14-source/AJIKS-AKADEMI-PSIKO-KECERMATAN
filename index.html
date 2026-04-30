@@ -162,6 +162,20 @@ body {
 .btn-confirm:hover { background: #a07d5a; }
 .btn-confirm.secondary { background: transparent; border: 2px solid var(--gold); color: var(--gold); }
 .btn-confirm.secondary:hover { background: var(--gold); color: #fff; }
+.jawaban-item.correct { background: rgba(30,126,78,.1); border-color: var(--success); }
+.jawaban-item.correct .radio-dot { border-color: var(--success); border-width: 2px; }
+.jawaban-item.correct .radio-dot::after { content: ''; position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%); width: 6px; height: 6px; background: var(--success); border-radius: 50%; }
+.jawaban-item.correct .j-letter, .jawaban-item.correct .j-sym { color: var(--success); }
+.jawaban-item.wrong { background: rgba(192,57,43,.08); border-color: var(--danger); }
+.jawaban-item.wrong .radio-dot { border-color: var(--danger); border-width: 2px; }
+.jawaban-item.wrong .radio-dot::after { content: ''; position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%); width: 6px; height: 6px; background: var(--danger); border-radius: 50%; }
+.jawaban-item.wrong .j-letter, .jawaban-item.wrong .j-sym { color: var(--danger); }
+.jawaban-item.reveal { background: rgba(30,126,78,.06); border-color: var(--success); border-style: dashed; }
+.jawaban-item.reveal .j-letter, .jawaban-item.reveal .j-sym { color: var(--success); }
+.jawaban-item.locked { cursor: default; pointer-events: none; }
+.feedback-box { margin-top: .75rem; padding: .6rem .85rem; border-radius: 5px; font-family: 'JetBrains Mono', monospace; font-size: .72rem; font-weight: 600; letter-spacing: .02em; display: none; }
+.feedback-box.benar { background: var(--success-bg); color: var(--success); border: 1px solid var(--success); display: block; }
+.feedback-box.salah { background: var(--danger-bg); color: var(--danger); border: 1px solid var(--danger); display: block; }
 .fadeup { animation: fadeup .3s ease both; }
 @keyframes fadeup { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
 @media (max-width: 380px) {
@@ -234,6 +248,7 @@ body {
       <div class="jawaban-wrap">
         <div class="jawaban-title">Jawaban Anda</div>
         <div class="jawaban-list" id="jawaban-list"></div>
+        <div id="feedback-box" class="feedback-box"></div>
         <div class="exam-nav">
           <button class="btn-next" id="btn-next" onclick="nextSoal()">Berikutnya →</button>
         </div>
@@ -555,8 +570,20 @@ function renderSoal() {
     list.appendChild(btn);
   });
 
+  const fb = $('feedback-box');
+  fb.className = 'feedback-box';
+  fb.textContent = '';
+
   const prev = S.answers[S.colIdx][soal.n];
-  if (prev) { const el = $(`jitem-${prev}`); if (el) el.classList.add('selected'); }
+  if (prev) {
+    const isCorrect = prev === soal.a;
+    Object.keys(col.keys).forEach(k => { const btn = $(`jitem-${k}`); if (btn) btn.classList.add('locked'); });
+    const sel = $(`jitem-${prev}`);
+    if (sel) sel.classList.add(isCorrect ? 'correct' : 'wrong');
+    if (!isCorrect) { const ok = $(`jitem-${soal.a}`); if (ok) ok.classList.add('reveal'); }
+    fb.className = 'feedback-box ' + (isCorrect ? 'benar' : 'salah');
+    fb.textContent = isCorrect ? '✓ Benar!' : `✗ Salah — Jawaban yang benar: ${soal.a}`;
+  }
 
   const card = $('soal-card');
   card.classList.remove('fadeup');
@@ -567,12 +594,20 @@ function renderSoal() {
 function pickAnswer(letter) {
   const col = COLUMNS[S.colIdx];
   const soal = col.qs[S.soalIdx];
+  if (S.answers[S.colIdx][soal.n]) return;
   S.answers[S.colIdx][soal.n] = letter;
-  Object.keys(col.keys).forEach(k => { const btn = $(`jitem-${k}`); if (btn) btn.classList.remove('selected'); });
-  const sel = $(`jitem-${letter}`); if (sel) sel.classList.add('selected');
+
+  const isCorrect = letter === soal.a;
+  Object.keys(col.keys).forEach(k => { const btn = $(`jitem-${k}`); if (btn) btn.classList.add('locked'); });
+  const sel = $(`jitem-${letter}`); if (sel) sel.classList.add(isCorrect ? 'correct' : 'wrong');
+  if (!isCorrect) { const ok = $(`jitem-${soal.a}`); if (ok) ok.classList.add('reveal'); }
+
+  const fb = $('feedback-box');
+  fb.className = 'feedback-box ' + (isCorrect ? 'benar' : 'salah');
+  fb.textContent = isCorrect ? '✓ Benar!' : `✗ Salah — Jawaban yang benar: ${soal.a}`;
+
   const done = Object.keys(S.answers[S.colIdx]).length;
-  const total = col.qs.length;
-  $('prog-bar').style.width = (done / total * 100) + '%';
+  $('prog-bar').style.width = (done / col.qs.length * 100) + '%';
 }
 
 
