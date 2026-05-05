@@ -342,7 +342,7 @@ body {
 
 <script>
 const COLUMNS = [
-  {id:1, num:"I", keys:{A:"Ж",B:"R",C:"Δ",D:"7",E:"Ω"}, difficulty:"mudah",
+  {id:1, num:"I", keys:{A:"●",B:"■",C:"▲",D:"◆",E:"★"}, difficulty:"mudah",
     qs:[
       {n:1,q:"R Δ 7 Ω",a:"A"},{n:2,q:"Ж Δ 7 Ω",a:"B"},{n:3,q:"Ж R 7 Ω",a:"C"},
       {n:4,q:"Ж R Δ Ω",a:"D"},{n:5,q:"Ж R Δ 7",a:"E"},{n:6,q:"7 Δ R Ж",a:"E"},
@@ -362,7 +362,7 @@ const COLUMNS = [
       {n:46,q:"Ж 7 R Ω",a:"C"},{n:47,q:"Δ Ж 7 Ω",a:"B"},{n:48,q:"R Ж Δ 7",a:"E"},
       {n:49,q:"R Δ Ω Ж",a:"D"},{n:50,q:"Ω 7 R Δ",a:"A"}
     ]},
-  {id:2, num:"II", keys:{A:"8",B:"Σ",C:"V",D:"%",E:"Φ"},
+  {id:2, num:"II", keys:{A:"○",B:"□",C:"△",D:"◇",E:"☆"}, difficulty:"mudah-sedang",
     qs:[
       {n:1,q:"Σ V % Φ",a:"A"},{n:2,q:"8 V % Φ",a:"B"},{n:3,q:"8 Σ % Φ",a:"C"},
       {n:4,q:"8 Σ V Φ",a:"D"},{n:5,q:"8 Σ V %",a:"E"},{n:6,q:"% V Σ 8",a:"E"},
@@ -382,7 +382,7 @@ const COLUMNS = [
       {n:46,q:"8 % Σ Φ",a:"C"},{n:47,q:"V 8 % Φ",a:"B"},{n:48,q:"Σ 8 V %",a:"E"},
       {n:49,q:"Σ V Φ 8",a:"D"},{n:50,q:"Φ % Σ V",a:"A"}
     ]},
-  {id:3, num:"III", keys:{A:"Q",B:"∞",C:"4",D:"Ψ",E:"G"},
+  {id:3, num:"III", keys:{A:"◉",B:"▓",C:"▼",D:"◈",E:"✦"}, difficulty:"sedang",
     qs:[
       {n:1,q:"∞ 4 Ψ G",a:"A"},{n:2,q:"Q 4 Ψ G",a:"B"},{n:3,q:"Q ∞ Ψ G",a:"C"},
       {n:4,q:"Q ∞ 4 G",a:"D"},{n:5,q:"Q ∞ 4 Ψ",a:"E"},{n:6,q:"Ψ 4 ∞ Q",a:"E"},
@@ -402,7 +402,7 @@ const COLUMNS = [
       {n:46,q:"Q Ψ ∞ G",a:"C"},{n:47,q:"4 Q Ψ G",a:"B"},{n:48,q:"∞ Q 4 Ψ",a:"E"},
       {n:49,q:"∞ 4 G Q",a:"D"},{n:50,q:"G Ψ ∞ 4",a:"A"}
     ]},
-  {id:4, num:"IV", keys:{A:"Ξ",B:"9",C:"Z",D:"£",E:"β"}, difficulty:"sedang",
+  {id:4, num:"IV", keys:{A:"◐",B:"◼",C:"◂",D:"◊",E:"✧"}, difficulty:"sedang-sulit",
     qs:[
       {n:1,q:"9 Z £ β",a:"A"},{n:2,q:"Ξ Z £ β",a:"B"},{n:3,q:"Ξ 9 £ β",a:"C"},
       {n:4,q:"Ξ 9 Z β",a:"D"},{n:5,q:"Ξ 9 Z £",a:"E"},{n:6,q:"£ Z 9 Ξ",a:"E"},
@@ -422,7 +422,7 @@ const COLUMNS = [
       {n:46,q:"Ξ £ 9 β",a:"C"},{n:47,q:"Z Ξ £ β",a:"B"},{n:48,q:"9 Ξ Z £",a:"E"},
       {n:49,q:"9 Z β Ξ",a:"D"},{n:50,q:"β £ 9 Z",a:"A"}
     ]},
-  {id:5, num:"V", keys:{A:"3",B:"¶",C:"◊",D:"∆",E:"§"}, difficulty:"sedang-sulit",
+  {id:5, num:"V", keys:{A:"◓",B:"█",C:"◃",D:"◉",E:"✪"}, difficulty:"sulit",
     qs:[
       {n:1,q:"¶ ◊ ∆ §",a:"A"},{n:2,q:"3 ◊ ∆ §",a:"B"},{n:3,q:"3 ¶ ∆ §",a:"C"},
       {n:4,q:"3 ¶ ◊ §",a:"D"},{n:5,q:"3 ¶ ◊ ∆",a:"E"},{n:6,q:"∆ ◊ ¶ 3",a:"E"},
@@ -442,7 +442,7 @@ const COLUMNS = [
       {n:46,q:"3 ∆ ¶ §",a:"C"},{n:47,q:"◊ 3 ∆ §",a:"B"},{n:48,q:"¶ 3 ◊ ∆",a:"E"},
       {n:49,q:"¶ ◊ § 3",a:"D"},{n:50,q:"§ ∆ ¶ ◊",a:"A"}
     ]},
-  {id:6, num:"VI", keys:{A:"τ",B:"ρ",C:"ν",D:"π",E:"λ"}, difficulty:"sulit",
+  {id:6, num:"VI", keys:{A:"◔",B:"▌",C:"◄",D:"◆",E:"✱"}, difficulty:"sulit",
     qs:[
       {n:1,q:"ρ ν π λ",a:"A"},{n:2,q:"τ ν π λ",a:"B"},{n:3,q:"τ ρ π λ",a:"C"},
       {n:4,q:"τ ρ ν λ",a:"D"},{n:5,q:"τ ρ ν π",a:"E"},{n:6,q:"π ν ρ τ",a:"E"},
@@ -462,7 +462,7 @@ const COLUMNS = [
       {n:46,q:"τ π ρ λ",a:"C"},{n:47,q:"ν τ π λ",a:"B"},{n:48,q:"ρ τ ν π",a:"E"},
       {n:49,q:"ρ ν λ τ",a:"D"},{n:50,q:"λ π ρ ν",a:"A"}
     ]},
-  {id:7, num:"VII", keys:{A:"∫",B:"∂",C:"∇",D:"∑",E:"∞"}, difficulty:"sulit",
+  {id:7, num:"VII", keys:{A:"◕",B:"▀",C:"▴",D:"◠",E:"✲"}, difficulty:"sangat-sulit",
     qs:[
       {n:1,q:"∂ ∇ ∑ ∞",a:"A"},{n:2,q:"∫ ∇ ∑ ∞",a:"B"},{n:3,q:"∫ ∂ ∑ ∞",a:"C"},
       {n:4,q:"∫ ∂ ∇ ∞",a:"D"},{n:5,q:"∫ ∂ ∇ ∑",a:"E"},{n:6,q:"∑ ∇ ∂ ∫",a:"E"},
@@ -482,7 +482,7 @@ const COLUMNS = [
       {n:46,q:"∫ ∑ ∂ ∞",a:"C"},{n:47,q:"∇ ∫ ∞ ∑",a:"B"},{n:48,q:"∂ ∫ ∇ ∑",a:"E"},
       {n:49,q:"∂ ∇ ∞ ∫",a:"D"},{n:50,q:"∞ ∑ ∂ ∇",a:"A"}
     ]},
-  {id:8, num:"VIII", keys:{A:"◈",B:"◉",C:"◎",D:"◊",E:"○"}, difficulty:"sangat-sulit",
+  {id:8, num:"VIII", keys:{A:"◖",B:"▄",C:"▵",D:"◡",E:"✳"}, difficulty:"sangat-sulit",
     qs:[
       {n:1,q:"◉ ◎ ◊ ○",a:"A"},{n:2,q:"◈ ◎ ◊ ○",a:"B"},{n:3,q:"◈ ◉ ◊ ○",a:"C"},
       {n:4,q:"◈ ◉ ◎ ○",a:"D"},{n:5,q:"◈ ◉ ◎ ◊",a:"E"},{n:6,q:"◊ ◎ ◉ ◈",a:"E"},
@@ -502,7 +502,7 @@ const COLUMNS = [
       {n:46,q:"◈ ◊ ◉ ○",a:"C"},{n:47,q:"◎ ◈ ○ ◊",a:"B"},{n:48,q:"◉ ◈ ◎ ◊",a:"E"},
       {n:49,q:"◉ ◎ ○ ◈",a:"D"},{n:50,q:"○ ◊ ◉ ◎",a:"A"}
     ]},
-  {id:9, num:"IX", keys:{A:"Ψ",B:"Ʃ",C:"Ħ",D:"Ɔ",E:"ℜ"}, difficulty:"sangat-sulit",
+  {id:9, num:"IX", keys:{A:"◗",B:"▌",C:"◀",D:"⬗",E:"✴"}, difficulty:"ekstrim",
     qs:[
       {n:1,q:"Ʃ Ħ Ɔ ℜ",a:"A"},{n:2,q:"Ψ Ħ Ɔ ℜ",a:"B"},{n:3,q:"Ψ Ʃ Ɔ ℜ",a:"C"},
       {n:4,q:"Ψ Ʃ Ħ ℜ",a:"D"},{n:5,q:"Ψ Ʃ Ħ Ɔ",a:"E"},{n:6,q:"Ɔ Ħ Ʃ Ψ",a:"E"},
@@ -522,7 +522,7 @@ const COLUMNS = [
       {n:46,q:"Ψ Ɔ Ʃ ℜ",a:"C"},{n:47,q:"Ħ Ψ ℜ Ɔ",a:"B"},{n:48,q:"Ʃ Ψ Ħ Ɔ",a:"E"},
       {n:49,q:"Ʃ Ħ ℜ Ψ",a:"D"},{n:50,q:"ℜ Ɔ Ʃ Ħ",a:"A"}
     ]},
-  {id:10, num:"X", keys:{A:"ǫ",B:"ɓ",C:"ƈ",D:"ɖ",E:"ɛ"}, difficulty:"ekstrim",
+  {id:10, num:"X", keys:{A:"◘",B:"▐",C:"▶",D:"⬘",E:"✵"}, difficulty:"ekstrim-maksimal",
     qs:[
       {n:1,q:"ɓ ƈ ɖ ɛ",a:"A"},{n:2,q:"ǫ ƈ ɖ ɛ",a:"B"},{n:3,q:"ǫ ɓ ɖ ɛ",a:"C"},
       {n:4,q:"ǫ ɓ ƈ ɛ",a:"D"},{n:5,q:"ǫ ɓ ƈ ɖ",a:"E"},{n:6,q:"ɖ ƈ ɓ ǫ",a:"E"},
