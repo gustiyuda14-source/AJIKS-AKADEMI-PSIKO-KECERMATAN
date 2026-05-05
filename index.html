@@ -146,6 +146,25 @@ body {
 .btn-ulang:hover { background: var(--gold); color: #fff; }
 .btn-finish { background: var(--danger); color: #fff; font-family: 'Lora', serif; font-size: .7rem; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; border: none; border-radius: 5px; padding: .6rem 1rem; cursor: pointer; box-shadow: 0 3px 10px rgba(192,57,43,.3); transition: background .2s, transform .15s; }
 .btn-finish:hover { background: #a02f24; transform: translateY(-2px); }
+#screen-mode { display: none; padding: 1.5rem 1rem 4rem; }
+#screen-mode.active { display: block; }
+.mode-wrap { max-width: 500px; margin: 0 auto; background: var(--bg-card); border: 1px solid var(--border-soft); border-radius: 8px; padding: 2rem 1.75rem; text-align: center; position: relative; box-shadow: 0 2px 10px rgba(26,35,50,.06); }
+.mode-wrap::before { content: ''; position: absolute; top: 0; left: 1.5rem; right: 1.5rem; height: 2px; background: var(--gold); border-radius: 2px; }
+.mode-title { font-family: 'Lora', serif; font-size: 1.3rem; font-weight: 700; color: var(--text-main); margin-bottom: .5rem; }
+.mode-sub { font-size: .78rem; color: var(--text-muted); font-style: italic; margin-bottom: 1.5rem; }
+.mode-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 1.5rem; }
+.mode-card { background: var(--bg-page); border: 2px solid var(--border-soft); border-radius: 8px; padding: 1.5rem; cursor: pointer; transition: all .2s; text-align: center; }
+.mode-card:hover { border-color: var(--gold); background: var(--bg-card); box-shadow: 0 2px 8px rgba(184,149,106,.15); }
+.mode-card.selected { border-color: var(--gold); background: rgba(184,149,106,.05); }
+.mode-icon { font-size: 2.5rem; margin-bottom: .75rem; }
+.mode-name { font-family: 'Lora', serif; font-size: .9rem; font-weight: 700; color: var(--text-main); margin-bottom: .35rem; }
+.mode-desc { font-size: .7rem; color: var(--text-muted); line-height: 1.4; margin-bottom: .75rem; }
+.mode-feature { font-size: .65rem; color: var(--text-dim); font-family: 'JetBrains Mono', monospace; background: var(--bg-row); padding: .3rem .5rem; border-radius: 3px; margin: .25rem 0; }
+.btn-mode-confirm { width: 100%; background: var(--gold); color: #fff; font-family: 'Lora', serif; font-size: .78rem; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; padding: .85rem; border: none; border-radius: 5px; cursor: pointer; transition: background .2s, transform .15s; box-shadow: 0 3px 8px rgba(184,149,106,.25); margin-top: 1.5rem; }
+.btn-mode-confirm:hover { background: #a07d5a; transform: translateY(-1px); }
+.timer-display { position: sticky; top: 48px; z-index: 100; height: 36px; background: var(--bg-card); border-bottom: 2px solid var(--border-soft); display: flex; align-items: center; justify-content: center; font-family: 'JetBrains Mono', monospace; font-size: 1rem; font-weight: 700; color: var(--text-main); }
+.timer-display.warning { color: var(--gold-warn); border-bottom-color: var(--gold-warn); }
+.timer-display.danger { color: var(--danger); border-bottom-color: var(--danger); }
 #screen-confirm { display: none; padding: 1.5rem 1rem 4rem; }
 #screen-confirm.active { display: block; }
 .confirm-wrap { max-width: 500px; margin: 0 auto; background: var(--bg-card); border: 1px solid var(--border-soft); border-radius: 8px; padding: 2rem; text-align: center; position: relative; box-shadow: 0 2px 10px rgba(26,35,50,.06); }
@@ -209,9 +228,36 @@ body {
   </div>
 </div>
 
+<div id="screen-mode" class="screen">
+  <div class="mode-wrap fadeup">
+    <h2 class="mode-title">Pilih Mode Ujian</h2>
+    <p class="mode-sub">Tentukan cara Anda ingin mengerjakan tes ini</p>
+    <div class="mode-grid">
+      <div class="mode-card" id="mode-training" onclick="selectMode('training')">
+        <div class="mode-icon">📚</div>
+        <div class="mode-name">Latihan</div>
+        <div class="mode-desc">Belajar tanpa tekanan waktu</div>
+        <div class="mode-feature">✓ Tidak ada batas waktu</div>
+        <div class="mode-feature">✓ Lihat jawaban langsung</div>
+        <div class="mode-feature">✓ Ulangi sembarangan</div>
+      </div>
+      <div class="mode-card" id="mode-realexam" onclick="selectMode('realexam')">
+        <div class="mode-icon">⏱️</div>
+        <div class="mode-name">Ujian Nyata</div>
+        <div class="mode-desc">Simulasi ujian sesungguhnya</div>
+        <div class="mode-feature">⏱ 1 menit per kolom</div>
+        <div class="mode-feature">✓ Lihat hasil akhir</div>
+        <div class="mode-feature">✓ Waktu dihitung mundur</div>
+      </div>
+    </div>
+    <button class="btn-mode-confirm" id="btn-mode-confirm" onclick="confirmMode()" disabled>Lanjut →</button>
+  </div>
+</div>
+
 <div id="screen-intro" class="screen">
+  <div id="timer-container"></div>
   <div class="intro-wrap fadeup">
-    <div class="intro-col-tag" id="itag">Kolom 1 dari 4</div>
+    <div class="intro-col-tag" id="itag">Kolom 1 dari 10</div>
     <h2 class="intro-col-title" id="ititle">Kolom I</h2>
     <p class="intro-col-sub">Pelajari tabel kunci — akan selalu tampil saat tes</p>
     <table class="intro-key-table" id="intro-ktable">
@@ -498,7 +544,7 @@ const COLUMNS = [
     ]}
 ];
 
-let S = { peserta: '', colIdx: 0, soalIdx: 0, answers: Array(10).fill(null).map(() => ({})) };
+let S = { peserta: '', colIdx: 0, soalIdx: 0, answers: Array(10).fill(null).map(() => ({})), mode: null, timerActive: false, timerSeconds: 60 };
 const $ = id => document.getElementById(id);
 function show(id) { document.querySelectorAll('.screen').forEach(s => s.classList.remove('active')); $(id).classList.add('active'); }
 
@@ -507,7 +553,28 @@ function startExam() {
   if (!name) { $('nm').focus(); $('nm').style.borderColor='var(--danger)'; return; }
   S.peserta = name; S.colIdx = 0; S.soalIdx = 0;
   S.answers = Array(10).fill(null).map(() => ({}));
+  S.mode = null;
   $('hdr-peserta').textContent = name;
+  showModeSelection();
+}
+
+function showModeSelection() {
+  $('mode-training').classList.remove('selected');
+  $('mode-realexam').classList.remove('selected');
+  $('btn-mode-confirm').disabled = true;
+  show('screen-mode');
+  window.scrollTo(0, 0);
+}
+
+function selectMode(mode) {
+  S.mode = mode;
+  $('mode-training').classList.toggle('selected', mode === 'training');
+  $('mode-realexam').classList.toggle('selected', mode === 'realexam');
+  $('btn-mode-confirm').disabled = false;
+}
+
+function confirmMode() {
+  if (!S.mode) return;
   showIntro();
 }
 
@@ -524,7 +591,58 @@ function showIntro() {
   show('screen-intro');
 }
 
-function launchColumn() { S.soalIdx = 0; renderSoal(); show('screen-exam'); window.scrollTo(0, 0); }
+function launchColumn() {
+  S.soalIdx = 0;
+  renderSoal();
+  show('screen-exam');
+  window.scrollTo(0, 0);
+  if (S.mode === 'realexam') {
+    startTimer();
+  }
+}
+
+function startTimer() {
+  S.timerActive = true;
+  S.timerSeconds = 60;
+  updateTimerDisplay();
+  S.timerInterval = setInterval(() => {
+    S.timerSeconds--;
+    updateTimerDisplay();
+    if (S.timerSeconds <= 0) {
+      clearInterval(S.timerInterval);
+      S.timerActive = false;
+      autoNextColumn();
+    }
+  }, 1000);
+}
+
+function stopTimer() {
+  if (S.timerInterval) {
+    clearInterval(S.timerInterval);
+    S.timerActive = false;
+  }
+}
+
+function updateTimerDisplay() {
+  let container = $('timer-container');
+  if (!container) {
+    const examContainer = document.querySelector('.exam-container');
+    if (examContainer) {
+      container = document.createElement('div');
+      container.id = 'timer-container';
+      examContainer.parentNode.insertBefore(container, examContainer);
+    }
+  }
+  if (container && S.mode === 'realexam') {
+    const mins = Math.floor(S.timerSeconds / 60);
+    const secs = S.timerSeconds % 60;
+    const display = `${mins}:${secs.toString().padStart(2, '0')}`;
+    container.className = 'timer-display ' + (S.timerSeconds <= 10 ? 'danger' : S.timerSeconds <= 20 ? 'warning' : '');
+    container.textContent = `⏱ Waktu tersisa: ${display}`;
+  } else if (container) {
+    container.textContent = '';
+  }
+}
 
 function renderSoal() {
   const col = COLUMNS[S.colIdx];
@@ -619,6 +737,7 @@ function nextSoal() {
 }
 
 function autoNextColumn() {
+  stopTimer();
   S.colIdx++;
   if (S.colIdx < 10) {
     S.soalIdx = 0;
@@ -657,6 +776,7 @@ function showResult() {
 }
 
 function earlySubmit() {
+  stopTimer();
   let totalAnswered = 0, totalSkipped = 0;
   for (let i = 0; i <= S.colIdx; i++) {
     Object.keys(S.answers[i]).forEach(k => { totalAnswered++; });
@@ -678,12 +798,18 @@ function cancelEarlySubmit() {
   renderSoal();
   show('screen-exam');
   window.scrollTo(0, 0);
+  if (S.mode === 'realexam' && S.timerActive === false) {
+    startTimer();
+  }
 }
 
 function resetAll() {
-  S = { peserta:'', colIdx:0, soalIdx:0, answers:Array(10).fill(null).map(() => ({})) };
+  stopTimer();
+  S = { peserta:'', colIdx:0, soalIdx:0, answers:Array(10).fill(null).map(() => ({})), mode:null, timerActive:false, timerSeconds:60 };
   $('nm').value = ''; $('nm').style.borderColor = '';
   $('hdr-peserta').textContent = '';
+  const timerContainer = $('timer-container');
+  if (timerContainer) timerContainer.textContent = '';
   show('screen-welcome');
   window.scrollTo(0, 0);
 }
